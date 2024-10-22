@@ -1,15 +1,18 @@
-{
-    "version": 2,
+ {
     "builds": [
       {
-        "src": "src/main.jsx",
-        "use": "@vercel/node"
+        "src": "vite.config.js",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist"
+        }
       }
     ],
-    "routes": [
+    "rewrites": [
       {
-        "src": "/(.*)",
-        "dest": "/src/main.jsx"
+        "source": "/(.*)",
+        "destination": "/index.html"
       }
     ]
-  }  
+  }
+  
