@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "vercel-start": "node src/index.js"
+    "vercel-start": "npm run build"
   },
   "dependencies": {
     "chart.js": "^4.4.4",
