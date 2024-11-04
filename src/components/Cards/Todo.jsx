@@ -25,7 +25,7 @@ export default function Todo({ todo, setTodos }) {
     }
   };
   function handleEdit() {
-    navigate('/editTask', {
+    navigate('/EditTask', {
       state: { id: todo.id }
     });
   }

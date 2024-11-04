@@ -140,7 +140,7 @@ function App() {
           }
         />
         <Route
-          path="/editTask"
+          path="/EditTask"
           element={
             <Suspense fallback={"Loading..."}>
               <Edittask />
