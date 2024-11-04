@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-export default function EditTask({ todoids }) {
+export default function Edittask({ todoids }) {
   const location = useLocation();
   const { id} = location.state || {};
   return (
