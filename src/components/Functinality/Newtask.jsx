@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
-export default function Createtask({setTodos}) {
+export default function Createtask({ setTodos }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -12,7 +12,7 @@ export default function Createtask({setTodos}) {
   };
 
   const handleAddTodo = async () => {
-    setError(""); 
+    setError("");
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -36,8 +36,8 @@ export default function Createtask({setTodos}) {
       const data = await response.json();
       if (response.ok) {
         alert(`Todo added successfully: ${data.msg}`);
-        setTodos(data.updatedTask)
-        console.log(`updated task is `,data.updatedTask);
+        setTodos(data.updatedTask);
+        console.log(`updated task is `, data.updatedTask);
         // navigate("/Homepage");
       } else {
         setError(`Error adding todo: ${data.msg}`);
@@ -48,48 +48,48 @@ export default function Createtask({setTodos}) {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
-      <h2 className="text-2xl font-semibold text-white mb-4">Add a New Task</h2>
+    <div className="bg-[#f0ebff] poppins-medium p-4 rounded-lg max-w-md mx-auto mt-10 shadow-lg">
+      <button
+        onClick={comback}
+        className="mb-4 p-2 bg-white text-black rounded-3xl w-[80px] hover:bg-[#f1ecff] transition duration-200"
+      >
+        Back
+      </button>
+
+      <h2 className="text-lg font-semibold mb-4 text-black">Add a New Task</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="title" className="block text-gray-300 mb-1">
+          <label htmlFor="title" className="block text-black mb-1">
             Title
           </label>
           <input
             type="text"
             id="title"
             placeholder="Enter title"
-            className="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 mt-1 bg-white text-black rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-gray-300 mb-1">
+          <label htmlFor="description" className="block text-black mb-1">
             Description
           </label>
           <textarea
             id="description"
             placeholder="Enter description"
-            className="w-full p-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 mt-1 bg-white text-black rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
         <button
-          className="w-full p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 mt-4"
+          className="w-full p-2 bg-white text-black rounded-3xl hover:bg-[#f1ecff] transition duration-200 mt-4"
           onClick={handleAddTodo}
         >
           Add Task
-        </button>
-
-        <button
-          className="w-full p-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-200 mt-2"
-          onClick={comback}
-        >
-          Back to Home page
         </button>
       </div>
     </div>
