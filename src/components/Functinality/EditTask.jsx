@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function Edittask() {
   // const location = useLocation();
   // const { id} = location.state || {};
+  const [title,setTitle]=useState("");
+  const [description,setDescription]=useState("");
+
   return (
     <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-white mb-4">Add a New Task</h2>
@@ -36,7 +40,7 @@ export default function Edittask() {
 
         <button
           className="w-full p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 mt-4"
-          onClick={handleAddTodo}
+        
         >
           Add Task
         </button>
