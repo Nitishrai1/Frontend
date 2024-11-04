@@ -7,7 +7,7 @@ import ResetFormComponent from "./components/ResetFormComponent";
 import UserProfile from "./components/DashboardSec/UserProfile";
 import Setting from "./components/DashboardSec/SettingCom";
 import Createtask from "./components/Functinality/Newtask";
-import Edittask from "./components/Functinality/EditTask";
+import EditTask from "./components/Functinality/EditTask";
 const apiUrl = import.meta.env.VITE_API_URL;
 import { Navigate } from 'react-router-dom';
 // Lazy loading components
@@ -143,7 +143,7 @@ function App() {
           path="/editTask"
           element={
             <Suspense fallback={"Loading..."}>
-              <Edittask />
+              <EditTask />
             </Suspense>
           }
         />
