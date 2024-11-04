@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function Edittask() {
-  // const location = useLocation();
-  // const { id} = location.state || {};
+  const location = useLocation();
+  const { id} = location.state || {};
   const [title,setTitle]=useState("");
   const [description,setDescription]=useState("");
 
