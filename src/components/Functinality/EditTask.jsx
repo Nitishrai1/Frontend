@@ -6,7 +6,7 @@ export default function Edittask() {
   const { id} = location.state || {};
   const [title,setTitle]=useState("");
   const [description,setDescription]=useState("");
-
+  console.log(`The id of the task in the edit compo is ${id}`);
   async function updatedTask(){
     try{
       const token=localStorage.getItem("token");
@@ -31,7 +31,7 @@ export default function Edittask() {
       }
 
     }catch(err){
-      alert("Error in the backend");
+      alert("Error in the backend",err);
 
     }
 
