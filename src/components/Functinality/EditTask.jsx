@@ -6,11 +6,11 @@ export default function Edittask() {
   const { id} = location.state || {};
   const [title,setTitle]=useState("");
   const [description,setDescription]=useState("");
-  console.log('inside the edittaks comp');
+  // console.log('inside the edittaks comp');
   return (
     <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-semibold text-white mb-4">Add a New Task</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      
 
       <div className="space-y-4">
         <div>
@@ -47,7 +47,7 @@ export default function Edittask() {
 
         <button
           className="w-full p-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-200 mt-2"
-          onClick={comback}
+          
         >
           Back to Home page
         </button>
