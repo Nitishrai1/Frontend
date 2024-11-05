@@ -6,6 +6,36 @@ export default function Edittask() {
   const { id} = location.state || {};
   const [title,setTitle]=useState("");
   const [description,setDescription]=useState("");
+
+  async function updatedTask(){
+    try{
+      const token=localStorage.getItem("token");
+      const response=await fetch(`${apiUrl}/user/updateTask`,{
+        method:'POST',
+        headers:{
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+        body:JSON.stringify({
+          taskId:id,
+          title:title,
+          description:description
+        })
+  
+      });
+      if(response.ok){
+        alert("Task updated successfull");
+      }else{
+        alert("error in updating the task");
+
+      }
+
+    }catch(err){
+      alert("Error in the backend");
+
+    }
+
+  }
   // console.log('inside the edittaks comp');
   return (
     <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
@@ -40,9 +70,10 @@ export default function Edittask() {
 
         <button
           className="w-full p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 mt-4"
+          onClick={updateTask}
         
         >
-          Add Task
+          Update Task
         </button>
 
         <button
