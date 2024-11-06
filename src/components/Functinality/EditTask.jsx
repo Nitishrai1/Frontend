@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-
+const apiUrl= import.meta.env.VITE_API_URL;
 export default function Edittask() {
   const location = useLocation();
   const { id} = location.state || {};
