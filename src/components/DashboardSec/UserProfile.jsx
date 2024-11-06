@@ -1,5 +1,5 @@
 import { Mail, CheckCircle2, Circle, ListTodo } from "lucide-react";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export default function UserProfile({ todos, userdata }) {
   const { email, username, ImageLink } = userdata;
 
