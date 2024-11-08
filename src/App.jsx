@@ -191,7 +191,7 @@ function App() {
           }
         />
         <Route
-          path="taskStat"
+          path="/taskStat"
           element={
             <Suspense fallback={"Loading..."}>
               <TaskCompletedTime todos={todos} />
