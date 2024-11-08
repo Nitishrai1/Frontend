@@ -13,6 +13,7 @@ import { Navigate } from "react-router-dom";
 // Lazy loading components
 const CreateTodo = lazy(() => import("./components/Functinality/Newtask"));
 import Alltask from "./components/Cards/Tasks/Alltask";
+// this is the component fot the clock button
 import TaskCompletedTime from "./components/DashboardSec/Timer";
 // const Todos = lazy(() => import("./components/Cards/Tasks/Alltask"));
 const Signin = lazy(() => import("./components/Signin"));
