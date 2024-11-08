@@ -24,7 +24,7 @@ export default function CollapsibleSidebar ({isAutehnticated,setAuthenticated ,s
     navigate("/setting");
   }
   function renderClock(){
-    navigate("taskStat")
+    navigate("/taskStat")
   }
 
   return (
