@@ -23,6 +23,9 @@ export default function CollapsibleSidebar ({isAutehnticated,setAuthenticated ,s
   function settingRenderer(){
     navigate("/setting");
   }
+  function renderClock(){
+    navigate("taskStat")
+  }
 
   return (
     <div className={`flex flex-col h-max-screen ${isOpen ? 'w-16' : 'w-12'} bg-[#1e0059] text-white transition-all duration-300`}>
@@ -55,7 +58,7 @@ export default function CollapsibleSidebar ({isAutehnticated,setAuthenticated ,s
               <button className="p-2 rounded-lg hover:bg-purple-700 transition-colors">
                 <Mail size={24} />
               </button>
-              <button className="p-2 rounded-lg hover:bg-purple-700 transition-colors">
+              <button className="p-2 rounded-lg hover:bg-purple-700 transition-colors" onClick={renderClock}>
                 <Clock size={24} />
               </button>
               <button className="p-2 rounded-lg hover:bg-purple-700 transition-colors">

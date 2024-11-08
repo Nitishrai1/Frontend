@@ -9,10 +9,11 @@ import Setting from "./components/DashboardSec/SettingCom";
 import Createtask from "./components/Functinality/Newtask";
 import Edittask from "./components/Functinality/EditTask";
 const apiUrl = import.meta.env.VITE_API_URL;
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 // Lazy loading components
 const CreateTodo = lazy(() => import("./components/Functinality/Newtask"));
 import Alltask from "./components/Cards/Tasks/Alltask";
+import TaskCompletedTime from "./components/DashboardSec/Timer";
 // const Todos = lazy(() => import("./components/Cards/Tasks/Alltask"));
 const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
@@ -90,7 +91,9 @@ function App() {
     }
   };
   if (isAuthenticated == null || isLoading) {
-    return <div className="spinner">Loading authentication status and data...</div>;
+    return (
+      <div className="spinner">Loading authentication status and data...</div>
+    );
   }
 
   return (
@@ -184,6 +187,14 @@ function App() {
           element={
             <Suspense fallback={"Loading..."}>
               <Createtask setTodos={setTodos} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="taskStat"
+          element={
+            <Suspense fallback={"Loading..."}>
+              <TaskCompletedTime todos={todos} />
             </Suspense>
           }
         />
