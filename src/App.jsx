@@ -35,7 +35,7 @@ function App() {
     if (token) {
       setAuthenticated(true);
       fetchData(token);
-      fetchUserData()
+      fetchDeveloperData()
     } else {
       setAuthenticated(false);
       setIsloading(false);
@@ -44,7 +44,7 @@ function App() {
   
   // loading ka logic hai niche jab tak fetch nahi hoga logind show hoga
   
-  const   fetchUserData=async(){
+  const fetchDeveloperData=async(){
         try{
             const response=await fetch(`${apiUrl}/user/Search/allUser`,{
                 method:'GET',
