@@ -181,19 +181,19 @@ export default function NavBarSection({
             </div>
           </div>
           <div className="flex items-center">
-            <span>{unreadCount}</span>
+            {/* <span>{unreadCount}</span> */}
             <Bell className="h-6 w-6" />
-            <div>
+            {/* <div>
               {notification.map((notif) => {
-                return (
+                
                   <div key={notif._id}>
                     return(
                     <p>{notif.projectDetails}</p>
                     <p>{notif.clientEmail}</p>; )
                   </div>
-                );
+                
               })}
-            </div>
+            </div> */}
 
             <div className="ml-4 flex items-center relative">
               <img
