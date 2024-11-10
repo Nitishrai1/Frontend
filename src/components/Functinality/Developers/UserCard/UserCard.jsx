@@ -3,7 +3,7 @@ import { Mail, ExternalLink } from "lucide-react";
 const UserCard = ({ user }) => {
   return (
     <div className="overflow-hidden transition-all hover:shadow-lg dark:bg-gray-800 p-6 flex flex-col items-center text-center rounded-lg border border-gray-300">
-      {/* Avatar */}
+      
       <div className="w-24 h-24 mb-4 bg-gray-200 rounded-full flex justify-center items-center">
         {user.imageLink ? (
           <img
@@ -21,11 +21,11 @@ const UserCard = ({ user }) => {
         )}
       </div>
 
-      {/* User Info */}
+     
       <h3 className="text-xl font-semibold mb-1">{user.userName}</h3>
       <p className="text-sm text-muted-foreground mb-4">{user.userEmail}</p>
 
-      {/* Action Links */}
+     
       <div className="flex space-x-4">
         <a
           href={`mailto:${user.userEmail}`}
