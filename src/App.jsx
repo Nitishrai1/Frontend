@@ -84,6 +84,7 @@ function App() {
       if (response.ok) {
         setUserdata(res.userProfile);
         console.log("userdata set succesfull");
+        console.log(res.userProfile);
       } else {
         console.log("Error in fetching the user data");
       }
