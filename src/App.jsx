@@ -53,7 +53,7 @@ function App() {
             if(response.ok){
               
               setAllDeveloper(data.totaluser);
-              console.log("User data fetch for the all developer comp",alldeveloper);
+              console.log("User data fetch for the all developer comp",data.totaluser);
             }else{
               console.log("Error in getting all develper data");
             }
