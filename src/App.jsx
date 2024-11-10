@@ -26,19 +26,39 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [userdata, setUserdata] = useState({});
   const [isLoading, setIsloading] = useState(true);
+  const [users,setUserData]=useState([]);
 
+  
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setAuthenticated(true);
       fetchData(token);
+      fetchUserData()
     } else {
       setAuthenticated(false);
       setIsloading(false);
     }
   }, [isAuthenticated]);
-
+  
   // loading ka logic hai niche jab tak fetch nahi hoga logind show hoga
+  
+  const   fetchUserData=async(){
+        try{
+            const response=await fetch(`${apiUrl}/user/Search/allUser`,{
+                method:'GET',
+            })
+            const data= await response.json();
+            setUserData(data);
+            console.log("User data fetch for the all developer comp");
+        }catch(err){
+            console.log("Error in fetching all developer data");
+  
+        }
+  
+  
+    }
   const fetchData = async (token) => {
     try {
       setIsloading(true);
@@ -149,7 +169,7 @@ function App() {
           path="/allDeveloper"
           element={
             <Suspense fallback={"Loading..."}>
-              <UserGrid />
+              <UserGrid users={users} />
             </Suspense>
           }
         />
