@@ -1,5 +1,5 @@
 import React, { useState, Suspense } from 'react';
-import { Switch } from '../../Ui/Switch';
+import { Switch } from "@/components/Ui";
 
 
 const UserCard = React.lazy(() => import("./UserCard/UserCard"));
