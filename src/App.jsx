@@ -26,7 +26,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [userdata, setUserdata] = useState({});
   const [isLoading, setIsloading] = useState(true);
-  const [users,setUserData]=useState([]);
+  const [alldeveloper,setAllDeveloper]=useState([]);
 
   
   
@@ -50,7 +50,7 @@ function App() {
                 method:'GET',
             })
             const data= await response.json();
-            setUserData(data);
+            setAllDeveloper(data);
             console.log("User data fetch for the all developer comp");
         }catch(err){
             console.log("Error in fetching all developer data");
@@ -169,7 +169,7 @@ function App() {
           path="/allDeveloper"
           element={
             <Suspense fallback={"Loading..."}>
-              <UserGrid users={users} />
+              <UserGrid users={alldeveloper} />
             </Suspense>
           }
         />
