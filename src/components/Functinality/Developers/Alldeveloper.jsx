@@ -5,11 +5,8 @@ import { useState } from 'react'
 import { Switch } from "@/components/ui/switch"
 const UserCard=import("./UserCard/UserCard")
 
-// UserCard component
 
-
-// UserGrid component
-const UserGrid = ({ users }) => {
+export default function UserGrid({ users }) {
   const [darkMode, setDarkMode] = useState(false)
 
   return (
@@ -32,14 +29,7 @@ const UserGrid = ({ users }) => {
   )
 }
 
-// Example usage
-const users = [
-  { userName: "Alice Johnson", userEmail: "alice@example.com", imageLink: "/placeholder.svg?height=100&width=100" },
-  { userName: "Bob Smith", userEmail: "bob@example.com", imageLink: "/placeholder.svg?height=100&width=100" },
-  { userName: "Charlie Brown", userEmail: "charlie@example.com", imageLink: "/placeholder.svg?height=100&width=100" },
-  { userName: "Diana Ross", userEmail: "diana@example.com", imageLink: "/placeholder.svg?height=100&width=100" },
-]
 
-export default function Component() {
-  return <UserGrid users={users} />
-}
+
+
+ 
