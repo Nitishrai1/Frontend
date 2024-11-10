@@ -1,24 +1,66 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Bell, Calendar, ChevronDown } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Calendar,
+  ChevronDown,
+  AwardIcon,
+  NewspaperIcon,
+} from "lucide-react";
+import io from "socket.io-client";
+const Back_End_url = import.meta.env.BACKEND_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
+
+const socket = io(`${apiUrl}`);
+
 export default function NavBarSection({
   filteredTodos,
   setFilteredTodos,
   searchquery,
   setSearchquery,
-  userdata
+  userdata,
 }) {
+  // eslint-disable-next-line react/prop-types
+  const developerId = userdata._id;
   const timerRef = useRef(null);
   const [image, setImage] = useState(null);
-  // const [userImage,setUserimage]=useState('');
-  const [userinfo,setUserinfo]=useState({userdata});
-  const [previewImage, setPreviewImage] = useState('/placeholder.svg'); // Default image
+
+  const [userinfo, setUserinfo] = useState({ userdata });
+  const [previewImage, setPreviewImage] = useState("/placeholder.svg"); // Default image
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [notification, setNotification] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   useEffect(() => {
     if (searchquery.trim() !== "") {
       updateFilteredTodo();
     }
-  }, [searchquery]);
+    const fetchNotification = async () => {
+      const response = await fetch(
+        `${apiUrl}/user/Search/notification/${developerId}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Notifiation data fetch succesull");
+        setNotification(data);
+        setUnreadCount(data.filter((n) => !n.read).length);
+      } else {
+        console.log("Failed to fetch notification");
+      }
+    };
+    fetchNotification();
+    socket.on(`notification-${developerId}`, (newNotification) => {
+      setNotification((prev) => [newNotification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+    });
+    return () => {
+      socket.off(`notification-${developerId}`);
+    };
+  }, [searchquery, developerId]);
 
   function handleChange(e) {
     const query = e.target.value;
@@ -40,18 +82,22 @@ export default function NavBarSection({
 
   const handleImageUpload = async () => {
     const formData = new FormData();
-    formData.append('image', image);
+    formData.append("image", image);
 
     try {
-      const response = await fetch(`${apiUrl}/user/Search/upload-profile-picture`,  {
-        method:'POST',
-        body:formData,
-      });
-      const data=await response.json();
-      if (response.ok) {  //if else is liye laga lo ki hab ok ayega tabhi set hoga url
+      const response = await fetch(
+        `${apiUrl}/user/Search/upload-profile-picture`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        //if else is liye laga lo ki hab ok ayega tabhi set hoga url
         setPreviewImage(data.imageUrl);
         console.log(`image link in the frontend is ${data.imageUrl}`);
-        const userimage = await updateuserprofile({ userImage: data.imageUrl }); 
+        const userimage = await updateuserprofile({ userImage: data.imageUrl });
         if (!userimage.ok) {
           alert(`Error in saving the image link in the database`);
         } else {
@@ -61,59 +107,48 @@ export default function NavBarSection({
         alert(`Error uploading image: ${data.error}`);
       }
     } catch (error) {
-      console.error('Error uploading image inn cloud', error);
+      console.error("Error uploading image inn cloud", error);
     }
   };
 
-  async function updateuserprofile({userImage}) {
-    try{
-      const token=localStorage.getItem('token');
-      console.log(`image link in the update frontedn ${userImage}`)
-      const response=await fetch(`${apiUrl}/user/updatePhoto`,{
-        method:'POST',
-        headers:{
-          'Content-Type':"application/json",
-          authorization:`${token}`,
+  async function updateuserprofile({ userImage }) {
+    try {
+      const token = localStorage.getItem("token");
+      console.log(`image link in the update frontedn ${userImage}`);
+      const response = await fetch(`${apiUrl}/user/updatePhoto`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${token}`,
         },
-        body:JSON.stringify({profilepicture:userImage}),
-
+        body: JSON.stringify({ profilepicture: userImage }),
       });
-      if(!response.ok){
+      if (!response.ok) {
         // console.log("error in uplaod the image");
         alert("Error in uploading image please try again");
       }
-      const res=await response.json();
+      const res = await response.json();
       alert(res.msg);
-    }catch(err){
+    } catch (err) {
       console.log("Error in the backend");
       alert(`Error ${err}`);
-      
-
     }
-
-    
   }
-
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-
-
   async function updateFilteredTodo() {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(
-        `${apiUrl}/user/Search/${searchquery}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-type": "application/json",
-            authorization: `${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${apiUrl}/user/Search/${searchquery}`, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          authorization: `${token}`,
+        },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -146,9 +181,19 @@ export default function NavBarSection({
             </div>
           </div>
           <div className="flex items-center">
-            <button className="p-2 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              <Bell className="h-6 w-6" />
-            </button>
+            <span>{unreadCount}</span>
+            <Bell className="h-6 w-6" />
+            <div>
+              {notification.map((notif) => {
+                return (
+                  <div key={notif._id}>
+                    return(
+                    <p>{notif.projectDetails}</p>
+                    <p>{notif.clientEmail}</p>; )
+                  </div>
+                );
+              })}
+            </div>
 
             <div className="ml-4 flex items-center relative">
               <img
@@ -187,10 +232,10 @@ export default function NavBarSection({
                     </div>
                   </div>
                 )}
-                
               </div>
-              <div className="tasky-heading text-lg m-6 rounded-3xl font-bold text-indigo-600 cursor-pointer">Tasky</div>
-
+              <div className="tasky-heading text-lg m-6 rounded-3xl font-bold text-indigo-600 cursor-pointer">
+                Tasky
+              </div>
             </div>
           </div>
         </div>
