@@ -1,5 +1,5 @@
-import { Card, CardContent } from "../../../ui/Card";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../ui/Avatar";
+import { Card, CardContent } from "../../../Ui/Card";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../Ui/Avatar";
 import { Mail, ExternalLink } from "lucide-react";
 
 const UserCard = ({ user }) => {
