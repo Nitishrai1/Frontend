@@ -50,8 +50,13 @@ function App() {
                 method:'GET',
             })
             const data= await response.json();
-            setAllDeveloper(data);
-            console.log("User data fetch for the all developer comp",alldeveloper);
+            if(response.ok){
+              
+              setAllDeveloper(data.totaluser);
+              console.log("User data fetch for the all developer comp",alldeveloper);
+            }else{
+              console.log("Error in getting all develper data");
+            }
         }catch(err){
             console.log("Error in fetching all developer data");
   
