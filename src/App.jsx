@@ -15,6 +15,7 @@ const CreateTodo = lazy(() => import("./components/Functinality/Newtask"));
 import Alltask from "./components/Cards/Tasks/Alltask";
 // this is the component fot the clock button
 import TaskCompletedTime from "./components/DashboardSec/Timer";
+import UserGrid from "./components/Functinality/Developers/Alldeveloper";
 // const Todos = lazy(() => import("./components/Cards/Tasks/Alltask"));
 const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
@@ -145,6 +146,14 @@ function App() {
           }
         />
         <Route
+          path="/allDeveloper"
+          element={
+            <Suspense fallback={"Loading..."}>
+              <UserGrid />
+            </Suspense>
+          }
+        />
+        <Route
           path="/EditTask"
           element={
             <Suspense fallback={"Loading..."}>
@@ -193,7 +202,7 @@ function App() {
           }
         />
         <Route
-          path="/taskStat"  
+          path="/taskStat"
           element={
             <Suspense fallback={"Loading..."}>
               <TaskCompletedTime todos={todos} />

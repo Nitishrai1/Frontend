@@ -11,7 +11,7 @@ import io from "socket.io-client";
 const Back_End_url = import.meta.env.BACKEND_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
 
-// const socket = io(`${apiUrl}`);
+
 
 export default function NavBarSection({
   filteredTodos,
@@ -36,30 +36,7 @@ export default function NavBarSection({
     if (searchquery.trim() !== "") {
       updateFilteredTodo();
     }
-  //   const fetchNotification = async () => {
-  //     const response = await fetch(
-  //       `${apiUrl}/user/Search/notification/${developerId}`,
-  //       {
-  //         method: "GET",
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       console.log("Notifiation data fetch succesull");
-  //       setNotification(data);
-  //       setUnreadCount(data.filter((n) => !n.read).length);
-  //     } else {
-  //       console.log("Failed to fetch notification");
-  //     }
-  //   };
-  //   fetchNotification();
-  //   socket.on(`notification-${developerId}`, (newNotification) => {
-  //     setNotification((prev) => [newNotification, ...prev]);
-  //     setUnreadCount((prev) => prev + 1);
-  //   });
-  //   return () => {
-  //     socket.off(`notification-${developerId}`);
-  //   };
+ 
   }, [searchquery]);
 
   function handleChange(e) {
