@@ -5,12 +5,12 @@ const UserCard = ({user}) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-4 text-center">
       <img
-        src={user.image}
-        alt={`${user.name}'s profile`}
+        src={user.imageLink}
+        alt={`${user.userName}'s profile`}
         className="w-24 h-24 rounded-full mx-auto mb-4"
       />
-      <h3 className="text-lg font-bold">{user.name}</h3>
-      <p className="text-gray-500">{user.email}</p>
+      <h3 className="text-lg font-bold">{user.userName}</h3>
+      <p className="text-gray-500">{user.userEmail}</p>
     </div>
   );
 };
