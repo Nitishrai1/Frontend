@@ -1,5 +1,5 @@
 import React, { useState, Suspense } from 'react';
-// import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/ui/switch";
 
 const UserCard = React.lazy(() => import("./UserCard/UserCard"));
 
@@ -13,7 +13,7 @@ export default function UserGrid({ users }) {
           <h1 className="text-3xl font-bold dark:text-white">Our Team</h1>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-muted-foreground dark:text-gray-400">Dark Mode</span>
-            {/* <Switch checked={darkMode} onCheckedChange={setDarkMode} /> */}
+            <Switch checked={darkMode} onCheckedChange={setDarkMode} />
           </div>
         </div>
         <Suspense fallback={<div>Loading...</div>}>
