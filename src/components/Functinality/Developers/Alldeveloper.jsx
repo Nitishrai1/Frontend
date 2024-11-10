@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import UserCard from './UserCard';
+import UserCard from './UserCard/UserCard';
 
 const UserGrid = (users) => {
 
