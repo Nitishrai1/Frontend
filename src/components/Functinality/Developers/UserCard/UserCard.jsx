@@ -50,7 +50,7 @@ const UserCard = ({ user }) => {
         projectUrl,
       };
 
-      const saveResponse = await fetch(`${apiUrl}user/Search/save-projectDetails`, {
+      const saveResponse = await fetch(`${apiUrl}/user/Search/save-projectDetails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
