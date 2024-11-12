@@ -1,8 +1,70 @@
 import { Mail, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const UserCard = ({ user }) => {
   const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [file, setFile] = useState(null);
+  const [developerId, setDeveloperId] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+
+  useEffect(() => {
+    // eslint-disable-next-line react/prop-types
+    setClientEmail(user.userEmail);
+    // eslint-disable-next-line react/prop-types
+    setDeveloperId(user.userId);
+  }, [user]);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!message || !file) {
+      alert("Please fill out the message and upload the file.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const uploadResponse = await fetch(`${apiUrl}/upload-projectFile`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const uploadData = await uploadResponse.json();
+      const projectUrl = uploadData.projectUrl;
+
+      const notificationData = {
+        developerId,
+        message,
+        clientEmail,
+        projectUrl,
+      };
+
+      const saveResponse = await fetch("/save-projectDetails", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(notificationData),
+      });
+
+      handleCloseModal();
+      alert("Project details uploaded and notification saved successfully!");
+    } catch (error) {
+      console.error("Error uploading project details:", error);
+      alert("Error uploading project details.");
+    }
+  };
 
   const messageDev = () => setIsMessageOpen(true);
   const handleCloseModal = () => setIsMessageOpen(false);
@@ -49,23 +111,32 @@ const UserCard = ({ user }) => {
               <h2 className="text-lg font-semibold mb-4 text-gray-800">
                 Message Developer
               </h2>
-              <form
-                className="space-y-4"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  handleCloseModal();
-                }}
-              >
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Your Message
                   </label>
                   <textarea
                     rows="4"
+                    value={message}
+                    onChange={handleMessageChange}
                     className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Type your message here..."
                   ></textarea>
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Upload Project Document
+                  </label>
+                  <input
+                    type="file"
+                    accept=".doc,.docx,.pdf"
+                    onChange={handleFileChange}
+                    className="w-full border border-gray-300 rounded-md shadow-sm p-2"
+                  />
+                </div>
+
                 <div className="flex justify-end space-x-2">
                   <button
                     type="button"
