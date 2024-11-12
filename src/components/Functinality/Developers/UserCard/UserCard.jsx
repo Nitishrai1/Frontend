@@ -35,7 +35,7 @@ const UserCard = ({ user }) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const uploadResponse = await fetch(`${apiUrl}/upload-projectFile`, {
+      const uploadResponse = await fetch(`${apiUrl}/user/Search/upload-projectFile`, {
         method: 'POST',
         body: formData,
       });
@@ -50,7 +50,7 @@ const UserCard = ({ user }) => {
         projectUrl,
       };
 
-      const saveResponse = await fetch("/save-projectDetails", {
+      const saveResponse = await fetch(`${apiUrl}user/Search/save-projectDetails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
