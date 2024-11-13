@@ -67,7 +67,7 @@ export default function NavBarSection({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          authorization: token,
+          authorization: `${token}`,
         },
       });
       const data = await response.json();
@@ -85,7 +85,7 @@ export default function NavBarSection({
         method: "GET",
         headers: {
           "Content-type": "application/json",
-          authorization: token,
+          authorization: `${token}`,
         },
       });
       const data2 = await response2.json();
