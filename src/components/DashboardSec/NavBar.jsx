@@ -228,18 +228,15 @@ export default function NavBarSection({
           </div>
           <div className="flex items-center">
             <div className="relative flex items-center">
-             
               <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                 {unreadCount}
               </span>
 
-              
               <Bell
                 className="h-6 w-6 cursor-pointer"
                 onClick={handleDropdown}
               />
 
-             
               {onOpen && (
                 <div className="absolute right-0 mt-8 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                   <div className="p-4">
@@ -268,9 +265,7 @@ export default function NavBarSection({
                         ))}
                       </ul>
                     ) : (
-                      <p className="text-sm text-gray-500">
-                      
-                      </p>
+                      <p className="text-sm text-gray-500"></p>
                     )}
                   </div>
                 </div>
@@ -315,12 +310,10 @@ export default function NavBarSection({
                   </div>
                 )}
               </div>
-              <div className="h-10 w-10">
-                <img
-                  src={previewImage}
-                  alt="Profile Preview"
-                  className="w-full h-full object-cover"
-                />
+              <div className="h-10 w-10 mx-3">
+                <h1 className="text-3xl font-bold "style={{ color: "rgb(116, 17, 228)" }} >Tasky</h1>
+
+                <div className="mt-2 border-t-2 border-dashed border-gray-500 w-24 mx-auto" ></div>
               </div>
             </div>
           </div>
