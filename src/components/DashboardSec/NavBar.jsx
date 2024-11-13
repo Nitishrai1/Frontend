@@ -85,6 +85,7 @@ export default function NavBarSection({
       setNotification(data2.allNotification);
     } catch (err) {
       setError(err.message);
+      console.log(err);
       alert("Error in fetching the notification");
     }
   };
