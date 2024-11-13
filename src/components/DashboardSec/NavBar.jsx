@@ -11,8 +11,6 @@ import io from "socket.io-client";
 const Back_End_url = import.meta.env.BACKEND_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
 
-
-
 export default function NavBarSection({
   filteredTodos,
   setFilteredTodos,
@@ -30,13 +28,48 @@ export default function NavBarSection({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [notification, setNotification] = useState([]);
+  const [newnotification, setnewNotification] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [error, setError] = useState();
+  const [onOpen, setOpen] = useState(false);
+
+  useEffect(() => {
+    updateNotification();
+  }, []);
+
+  const updateNotification = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/user/unreadNotification`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      });
+      const data = response.json();
+      setnewNotification(data.unreadNotification);
+      setUnreadCount(data.unreadNotification.length);
+
+      const response2 = await fetch(`${apiUrl}/user/allNotification`, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          authorization: token,
+        },
+      });
+      const data2 = response2.json();
+      setNotification(data2.allNotification);
+    } catch (err) {
+      setError(err.message);
+      alert("Error in fetching the notification");
+    }
+  };
 
   useEffect(() => {
     if (searchquery.trim() !== "") {
       updateFilteredTodo();
     }
- 
   }, [searchquery]);
 
   function handleChange(e) {
@@ -139,6 +172,8 @@ export default function NavBarSection({
     }
   }
 
+  const handleDropdown = () => setOpen(!onOpen);
+
   return (
     <nav className="bg-[#f2f6fe] poppins-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -158,19 +193,41 @@ export default function NavBarSection({
             </div>
           </div>
           <div className="flex items-center">
-            {/* <span>{unreadCount}</span> */}
-            <Bell className="h-6 w-6" />
-            {/* <div>
-              {notification.map((notif) => {
-                
-                  <div key={notif._id}>
-                    return(
-                    <p>{notif.projectDetails}</p>
-                    <p>{notif.clientEmail}</p>; )
-                  </div>
-                
-              })}
-            </div> */}
+            <span>{unreadCount}</span>
+            <Bell className="h-6 w-6 cursor-pointer" onClick={handleDropdown} />
+            {onOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold mb-2">Notifications</h3>
+                  {newnotification.length > 0 ? (
+                    <ul className="space-y-2">
+                      {newnotification.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="border-b last:border-none pb-2"
+                        >
+                          <p className="font-medium text-gray-800">
+                            {notification.message}
+                          </p>
+                          <a
+                            href={notification.projectDetails}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline text-sm"
+                          >
+                            View Project
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      No new notifications
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="ml-4 flex items-center relative">
               <img
