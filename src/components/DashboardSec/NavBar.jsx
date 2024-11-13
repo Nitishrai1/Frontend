@@ -71,6 +71,7 @@ export default function NavBarSection({
         },
       });
       const data = await response.json();
+      console.log(`unread messages are ${data.unreadNotification}`)
   
       
       const unreadNotifications = data.unreadNotification.map(notification => ({
@@ -89,6 +90,8 @@ export default function NavBarSection({
         },
       });
       const data2 = await response2.json();
+      console.log(`allnotifcation messages are ${data.allNotification}`)
+
   
       
       const allNotifications = data2.allNotification.map(notification => ({
