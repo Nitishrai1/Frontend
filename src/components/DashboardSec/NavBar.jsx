@@ -8,6 +8,7 @@ import {
   NewspaperIcon,
 } from "lucide-react";
 import io from "socket.io-client";
+
 const Back_End_url = import.meta.env.BACKEND_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -18,15 +19,11 @@ export default function NavBarSection({
   setSearchquery,
   userdata,
 }) {
-  // eslint-disable-next-line react/prop-types
   const developerId = userdata._id;
   const timerRef = useRef(null);
   const [image, setImage] = useState(null);
-
-  const [userinfo, setUserinfo] = useState({ userdata });
-  const [previewImage, setPreviewImage] = useState("/placeholder.svg"); // Default image
+  const [previewImage, setPreviewImage] = useState("/placeholder.svg");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const [notification, setNotification] = useState([]);
   const [newnotification, setnewNotification] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -35,11 +32,37 @@ export default function NavBarSection({
 
   useEffect(() => {
     updateNotification();
+
+    // Cleanup timer on unmount
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (searchquery.trim() !== "") {
+      updateFilteredTodo();
+    }
+  }, [searchquery]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isDropdownOpen && !event.target.closest(".relative")) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const updateNotification = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await fetch(`${apiUrl}/user/unreadNotification`, {
         method: "GET",
         headers: {
@@ -47,7 +70,7 @@ export default function NavBarSection({
           authorization: token,
         },
       });
-      const data = response.json();
+      const data = await response.json();
       setnewNotification(data.unreadNotification);
       setUnreadCount(data.unreadNotification.length);
 
@@ -58,19 +81,13 @@ export default function NavBarSection({
           authorization: token,
         },
       });
-      const data2 = response2.json();
+      const data2 = await response2.json();
       setNotification(data2.allNotification);
     } catch (err) {
       setError(err.message);
       alert("Error in fetching the notification");
     }
   };
-
-  useEffect(() => {
-    if (searchquery.trim() !== "") {
-      updateFilteredTodo();
-    }
-  }, [searchquery]);
 
   function handleChange(e) {
     const query = e.target.value;
@@ -87,7 +104,7 @@ export default function NavBarSection({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
-    setPreviewImage(URL.createObjectURL(file)); // Display the image preview before upload
+    setPreviewImage(URL.createObjectURL(file));
   };
 
   const handleImageUpload = async () => {
@@ -103,51 +120,48 @@ export default function NavBarSection({
         }
       );
       const data = await response.json();
+
       if (response.ok) {
-        //if else is liye laga lo ki hab ok ayega tabhi set hoga url
         setPreviewImage(data.imageUrl);
-        console.log(`image link in the frontend is ${data.imageUrl}`);
+        console.log(`Image link in the frontend is ${data.imageUrl}`);
         const userimage = await updateuserprofile({ userImage: data.imageUrl });
+
         if (!userimage.ok) {
-          alert(`Error in saving the image link in the database`);
+          alert("Error in saving the image link in the database");
         } else {
-          alert(`Image link saved in the database successfully`);
+          alert("Image link saved in the database successfully");
         }
       } else {
         alert(`Error uploading image: ${data.error}`);
       }
     } catch (error) {
-      console.error("Error uploading image inn cloud", error);
+      console.error("Error uploading image in cloud", error);
     }
   };
 
   async function updateuserprofile({ userImage }) {
     try {
       const token = localStorage.getItem("token");
-      console.log(`image link in the update frontedn ${userImage}`);
       const response = await fetch(`${apiUrl}/user/updatePhoto`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          authorization: `${token}`,
+          authorization: token,
         },
         body: JSON.stringify({ profilepicture: userImage }),
       });
+
       if (!response.ok) {
-        // console.log("error in uplaod the image");
-        alert("Error in uploading image please try again");
+        alert("Error in uploading image. Please try again.");
       }
+
       const res = await response.json();
       alert(res.msg);
     } catch (err) {
-      console.log("Error in the backend");
-      alert(`Error ${err}`);
+      console.error("Error in backend:", err);
+      alert(`Error: ${err}`);
     }
   }
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   async function updateFilteredTodo() {
     const token = localStorage.getItem("token");
@@ -156,7 +170,7 @@ export default function NavBarSection({
         method: "GET",
         headers: {
           "Content-type": "application/json",
-          authorization: `${token}`,
+          authorization: token,
         },
       });
 
@@ -165,12 +179,16 @@ export default function NavBarSection({
         console.log(`Filtered data fetched successfully`, data.task);
         setFilteredTodos(data.task);
       } else {
-        console.error("Error in fetching the filtered data");
+        console.error("Error fetching filtered data");
       }
     } catch (error) {
-      console.error("Error in fetching the filtered data:", error);
+      console.error("Error fetching filtered data:", error);
     }
   }
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleDropdown = () => setOpen(!onOpen);
 
@@ -183,12 +201,11 @@ export default function NavBarSection({
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
               </div>
-
               <input
                 type="text"
                 placeholder="Search"
                 onChange={handleChange}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
           </div>
@@ -232,17 +249,17 @@ export default function NavBarSection({
             <div className="ml-4 flex items-center relative">
               <img
                 className="h-8 w-8 rounded-full cursor-pointer"
-                src={userdata.ImageLink}
+                src={userdata?.ImageLink || "/default-profile.png"}
                 alt="User profile"
                 onClick={toggleDropdown}
               />
               <span className="ml-2 text-sm font-medium text-gray-700">
-                {userdata.username}
+                {userdata?.username || "Guest"}
               </span>
               <div className="relative">
                 <button
                   onClick={toggleDropdown}
-                  className="ml-2 text-sm font-medium text-gray-700 focus:outline-none"
+                  className="ml-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   ▼
                 </button>
@@ -267,8 +284,12 @@ export default function NavBarSection({
                   </div>
                 )}
               </div>
-              <div className="tasky-heading text-lg m-6 rounded-3xl font-bold text-indigo-600 cursor-pointer">
-                Tasky
+              <div className="h-10 w-10">
+                <img
+                  src={previewImage}
+                  alt="Profile Preview"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
