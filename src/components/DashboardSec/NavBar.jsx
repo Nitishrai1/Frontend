@@ -62,7 +62,7 @@ export default function NavBarSection({
   const updateNotification = async () => {
     try {
       const token = localStorage.getItem("token");
-
+  
       const response = await fetch(`${apiUrl}/user/unreadNotification`, {
         method: "GET",
         headers: {
@@ -71,9 +71,16 @@ export default function NavBarSection({
         },
       });
       const data = await response.json();
-      setnewNotification(data.unreadNotification);
-      setUnreadCount(data.unreadNotification.length);
-
+  
+      
+      const unreadNotifications = data.unreadNotification.map(notification => ({
+        message: notification.message,
+        projectDetails: notification.projectDetails
+      }));
+  
+      setnewNotification(unreadNotifications);
+      setUnreadCount(unreadNotifications.length);
+  
       const response2 = await fetch(`${apiUrl}/user/allNotification`, {
         method: "GET",
         headers: {
@@ -82,13 +89,21 @@ export default function NavBarSection({
         },
       });
       const data2 = await response2.json();
-      setNotification(data2.allNotification);
+  
+      
+      const allNotifications = data2.allNotification.map(notification => ({
+        message: notification.message,
+        projectDetails: notification.projectDetails
+      }));
+  
+      setNotification(allNotifications);
     } catch (err) {
       setError(err.message);
       console.log(err);
       alert("Error in fetching the notification");
     }
   };
+  
 
   function handleChange(e) {
     const query = e.target.value;
