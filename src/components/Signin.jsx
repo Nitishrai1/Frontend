@@ -24,7 +24,7 @@ export default function Signin() {
       if (response.ok) {
         localStorage.setItem('token', res.token);
         alert('Logged in successfully');
-        navigate('/');
+        navigate('/homepage');
       } else {
         alert('Incorrect username or password');
       }
