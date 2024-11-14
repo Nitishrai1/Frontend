@@ -70,7 +70,7 @@ const UserCard = ({ user }) => {
   const handleCloseModal = () => setIsMessageOpen(false);
 
   return (
-    <div className="overflow-hidden transition-all hover:shadow-lg dark:bg-gray-800 p-6 flex flex-col items-center text-center rounded-lg border border-gray-300">
+    <div className="overflow-hidden transition-all hover:shadow-lg dark:bg-[#f1ecff] p-6 flex flex-col items-center text-center rounded-lg border border-gray-300">
       <div className="w-24 h-24 mb-4 bg-gray-200 rounded-full flex justify-center items-center">
         {user.imageLink ? (
           <img
