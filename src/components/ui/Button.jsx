@@ -1,20 +1,21 @@
+// components/ui/button.jsx
+import React from 'react';
+import { cn } from '../../../lib/utils';
 
+export const Button = React.forwardRef(({ variant = 'primary', className, ...props }, ref) => {
+  return (
+    <button
+      ref={ref}
+      className={cn(
+        'px-4 py-2 rounded font-medium focus:outline-none focus:ring',
+        variant === 'primary'
+          ? 'bg-blue-500 text-white hover:bg-blue-600'
+          : 'bg-gray-300 text-black hover:bg-gray-400',
+        className
+      )}
+      {...props}
+    />
+  );
+});
 
-
-export default function Button({ children, variant = "default", ...props }) {
-    const baseStyles = "px-4 py-2 rounded-2xl text-white font-semibold";
-    const variantStyles = {
-      default: "bg-primary_hard hover:bg-primary_hard",
-      ghost: "bg-transparent hover:bg-indigo-700",
-    };
-    
-    return (
-      <button 
-        className={`${baseStyles} ${variantStyles[variant]}`} 
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  }
-  
+Button.displayName = 'Button';

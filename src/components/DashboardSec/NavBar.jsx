@@ -7,9 +7,7 @@ import {
   AwardIcon,
   NewspaperIcon,
 } from "lucide-react";
-import io from "socket.io-client";
 
-const Back_End_url = import.meta.env.BACKEND_URL;
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function NavBarSection({
@@ -207,7 +205,29 @@ export default function NavBarSection({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleDropdown = () => setOpen(!onOpen);
+  const handleDropdown = () =>{
+    setOpen(!onOpen);
+    updateNotificaiton();
+  };
+  const  updateNotificaiton=async()=>{
+    try{
+      const token=localStorage.getItem('token');
+      const response=await fetch(`${apiUrl}/user/Search/updateNotification`,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          authorization:token,
+        }
+      });
+      const data=await response.json();
+      console.log(data.msg);
+
+
+    }catch(Err){
+      alert(`Error in updating the notificaiton read ${Err.message}`)
+
+    }
+  }
 
   return (
     <nav className="bg-[#f2f6fe] poppins-light">
@@ -236,41 +256,42 @@ export default function NavBarSection({
                 className="h-6 w-6 cursor-pointer"
                 onClick={handleDropdown}
               />
-
-              {onOpen && (
-                <div className="absolute right-0 mt-8 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Notifications
-                    </h3>
-                    {newnotification.length > 0 ? (
-                      <ul className="space-y-2">
-                        {newnotification.map((notification, index) => (
-                          <li
-                            key={index}
-                            className="border-b last:border-none pb-2"
-                          >
-                            <p className="font-medium text-gray-800">
-                              {notification.message}
-                            </p>
-                            <a
-                              href={notification.projectDetails}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline text-sm"
-                            >
-                              View Project
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-sm text-gray-500"></p>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
+            {onOpen && (
+              <div className="absolute right-2  mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden max-h-96 overflow-y-auto">
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                    Notifications
+                  </h3>
+                  {newnotification.length > 0 ? (
+                    <ul className="space-y-2">
+                      {newnotification.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="border-b last:border-none pb-2"
+                        >
+                          <p className="font-medium text-gray-800">
+                            {notification.message}
+                          </p>
+                          <a
+                            href={notification.projectDetails}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline text-sm"
+                          >
+                            View Project
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      No new notifications
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="ml-4 flex items-center relative">
               <img
@@ -311,9 +332,14 @@ export default function NavBarSection({
                 )}
               </div>
               <div className="h-10 w-10 mx-3">
-                <h1 className="text-3xl font-bold "style={{ color: "rgb(116, 17, 228)" }} >Tasky</h1>
+                <h1
+                  className="text-3xl font-bold "
+                  style={{ color: "rgb(116, 17, 228)" }}
+                >
+                  Tasky
+                </h1>
 
-                <div className="mt-2 border-t-2 border-dashed border-gray-500 w-24 mx-auto" ></div>
+                <div className="mt-2 border-t-2 border-dashed border-gray-500 w-24 mx-auto"></div>
               </div>
             </div>
           </div>
