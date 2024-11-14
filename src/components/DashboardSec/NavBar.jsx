@@ -249,7 +249,7 @@ export default function NavBarSection({
           <div className="flex items-center">
             <div className="relative flex items-center">
               <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                {unreadCount}
+                {unreadCount>0 ? unreadCount : ''}
               </span>
 
               <Bell
