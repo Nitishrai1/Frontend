@@ -7,20 +7,11 @@ export default function UserGrid({ users }) {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
-      <div className="container mx-auto py-8 px-4 dark:bg-gray-900">
+    <div className={`min-h-screen `} style={{backgroundColor: `rgb(242, 246,251, 1)`}}>
+      <div className="container mx-auto py-8 px-4"  style={{backgroundColor: `rgb(242, 246,251, 1)`}}>
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold dark:text-white">All Developers</h1>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground dark:text-gray-400">Dark Mode</span>
-            
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2 bg-gray-200 rounded-full"
-            >
-              {darkMode ? '🌙' : '🌞'}
-            </button>
-          </div>
+          <h1 className="text-3xl font-bold dark:text-black">All Developers</h1>
+          
         </div>
 
         <Suspense fallback={<div>Loading...</div>}>

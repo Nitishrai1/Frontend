@@ -1,28 +1,42 @@
 export default function TaskCompletedTime({ todos }) {
+  // Check if todos is undefined or null, if so, provide an empty array as a fallback
+  const safeTotos = todos || [];
+
   return (
-    <div className="todo-list min-h-screen grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 overflow-y-auto bg-gray-50 rounded-lg shadow-inner">
-      {todos.map((todo) => (
-        <div
-          key={todo.id}
-          className="bg-white shadow-md rounded-xl p-5 transition-transform transform hover:scale-105 hover:shadow-lg border border-gray-300 flex flex-col justify-between"
-        >
-          {/* Task Title and Description */}
-          <div>
-            <h3 className="text-lg font-bold mb-2 text-blue-800">{todo.title}</h3>
-            <p className="text-sm text-blue-600 mb-4">{todo.description}</p>
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-indigo-100 p-6 sm:p-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {safeTotos.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-md p-6 text-center">
+            <p className="text-lg text-gray-600">No todos available</p>
           </div>
-          
-          {/* Task Start and End Time */}
-          <div className="mt-4">
-            <p className="text-xs text-blue-400">
-              <span className="font-medium">Start:</span> {todo.startDate}
-            </p>
-            <p className="text-xs text-blue-400">
-              <span className="font-medium">End:</span> {todo.endDate ? todo.endDate : "In Progress"}
-            </p>
-          </div>
-        </div>
-      ))}
+        ) : (
+          safeTotos.map((todo) => (
+            <div
+              key={todo.id}
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+            >
+              <div className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                <div className="flex-grow space-y-2 sm:space-y-3">
+                  <h3 className="text-xl sm:text-2xl font-bold text-indigo-800 line-clamp-1">{todo.title}</h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">{todo.description}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm w-full sm:w-auto">
+                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center justify-between sm:flex-col sm:items-start">
+                    <span className="font-medium mr-2 sm:mr-0">Start</span>
+                    <span>{todo.startDate}</span>
+                  </div>
+                  <div className={`px-3 py-1 rounded-full flex items-center justify-between sm:flex-col sm:items-start ${
+                    todo.endDate ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    <span className="font-medium mr-2 sm:mr-0">End</span>
+                    <span>{todo.endDate || "In Progress"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
