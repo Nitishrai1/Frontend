@@ -1,20 +1,32 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Bell, ChevronDown } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Calendar,
+  ChevronDown,
+  AwardIcon,
+  NewspaperIcon,
+} from "lucide-react";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function NavBarSection({
+  filteredTodos,
   setFilteredTodos,
-  setSearchQuery,
+  searchquery,
+  setSearchquery,
   userdata,
 }) {
+  const developerId = userdata._id;
+  const timerRef = useRef(null);
+  const [image, setImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState("/placeholder.svg");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [notification, setNotification] = useState([]);
-  const [newNotification, setNewNotification] = useState([]);
+  const [newnotification, setnewNotification] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [error, setError] = useState(null);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const timerRef = useRef(null);
+  const [onOpen, setOpen] = useState(false);
 
   useEffect(() => {
     updateNotification();
@@ -26,19 +38,22 @@ export default function NavBarSection({
   }, []);
 
   useEffect(() => {
+    if (searchquery.trim() !== "") {
+      updateFilteredTodo();
+    }
+  }, [searchquery]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isDropdownOpen && !event.target.closest(".user-dropdown")) {
+      if (isDropdownOpen && !event.target.closest(".relative")) {
         setIsDropdownOpen(false);
-      }
-      if (isNotificationOpen && !event.target.closest(".notification-dropdown")) {
-        setIsNotificationOpen(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [isDropdownOpen, isNotificationOpen]);
+  }, [isDropdownOpen]);
 
   const updateNotification = async () => {
     try {
@@ -58,7 +73,7 @@ export default function NavBarSection({
         projectDetails: notification.projectDetails,
       }));
 
-      setNewNotification(unreadNotifications || []);
+      setnewNotification(unreadNotifications || []);
       setUnreadCount(unreadNotifications.length || 0);
 
       const response2 = await fetch(`${apiUrl}/user/allNotification`, {
@@ -89,17 +104,66 @@ export default function NavBarSection({
     }
 
     timerRef.current = setTimeout(() => {
-      setSearchQuery(query);
-      if (query.trim() !== "") {
-        updateFilteredTodo(query);
-      }
+      setSearchquery(query);
+      console.log(`Search query updated to: ${query}`);
     }, 500);
   };
 
-  const updateFilteredTodo = async (query) => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
+  const handleImageUpload = async () => {
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      const response = await fetch(`${apiUrl}/user/Search/upload-profile-picture`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setPreviewImage(data.imageUrl);
+        await updateUserProfile({ userImage: data.imageUrl });
+      } else {
+        alert(`Error uploading image: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const updateUserProfile = async ({ userImage }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/user/updatePhoto`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+        body: JSON.stringify({ profilepicture: userImage }),
+      });
+
+      const res = await response.json();
+      if (!response.ok) {
+        alert("Error saving image link to the database");
+      } else {
+        alert(res.msg);
+      }
+    } catch (err) {
+      console.error("Error updating user profile:", err);
+    }
+  };
+
+  const updateFilteredTodo = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`${apiUrl}/user/Search/${query}`, {
+      const response = await fetch(`${apiUrl}/user/Search/${searchquery}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -122,17 +186,17 @@ export default function NavBarSection({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const toggleNotification = () => {
-    setIsNotificationOpen(!isNotificationOpen);
+  const handleDropdown = () => {
+    setOpen(!onOpen);
     updateNotification();
   };
 
   return (
-    <nav className="bg-[#f2f6fe] shadow-md">
+    <nav className="bg-[#f2f6fe] poppins-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between h-16">
           <div className="flex-1 flex items-center">
-            <div className="relative w-full max-w-xs">
+            <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
               </div>
@@ -144,79 +208,88 @@ export default function NavBarSection({
               />
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="relative notification-dropdown">
-              <button
-                className="relative p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={toggleNotification}
-              >
-                <span className="sr-only">View notifications</span>
-                <Bell className="h-6 w-6" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white" />
-                )}
-              </button>
-              {isNotificationOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="px-4 py-2 text-sm text-gray-700">
-                    <h3 className="text-lg font-semibold mb-2">Notifications</h3>
-                    {newNotification.length > 0 ? (
-                      <ul className="space-y-2">
-                        {newNotification.map((notification, index) => (
-                          <li key={index} className="border-b last:border-none pb-2">
-                            <p className="font-medium">{notification.message}</p>
-                            <a
-                              href={notification.projectDetails}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline text-sm"
-                            >
-                              View Project
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-sm text-gray-500">No new notifications</p>
-                    )}
-                  </div>
-                </div>
-              )}
+          <div className="flex items-center">
+            <div className="relative flex items-center">
+              <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                {unreadCount > 0 ? unreadCount : ""}
+              </span>
+              <Bell
+                className="h-6 w-6 cursor-pointer"
+                onClick={handleDropdown}
+              />
             </div>
-            <div className="relative user-dropdown">
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <img
-                  className="h-8 w-8 rounded-full"
-                  src={userdata?.ImageLink || "/default-profile.png"}
-                  alt="User profile"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  {userdata?.username || "Guest"}
-                </span>
-                <ChevronDown className="h-4 w-4 text-gray-400" />
-              </button>
-              {isDropdownOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <a
-                    href="/settings"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Settings
-                  </a>
-                  <button
-                    onClick={() => {
-                      localStorage.clear();
-                      window.location.reload();
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+            {onOpen && (
+              <div className="absolute right-2 mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden max-h-96 overflow-y-auto">
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold mb-2 text-gray-800">
+                    Notifications
+                  </h3>
+                  {newnotification.length > 0 ? (
+                    <ul className="space-y-2">
+                      {newnotification.map((notification, index) => (
+                        <li
+                          key={index}
+                          className="border-b last:border-none pb-2"
+                        >
+                          <p className="font-medium text-gray-800">
+                            {notification.message}
+                          </p>
+                          <a
+                            href={notification.projectDetails}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline text-sm"
+                          >
+                            View Project
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      No new notifications
+                    </p>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
+            <div className="ml-4 flex items-center relative">
+              <img
+                className="h-8 w-8 rounded-full cursor-pointer"
+                src={userdata?.ImageLink || "/default-profile.png"}
+                alt="User profile"
+                onClick={toggleDropdown}
+              />
+              <span className="ml-2 text-sm font-medium text-gray-700">
+                {userdata?.username || "Guest"}
+              </span>
+              <div className="relative">
+                <button
+                  onClick={toggleDropdown}
+                  className="ml-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  ▼
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                    <a
+                      href="/settings"
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      Settings
+                    </a>
+                    <button
+                      onClick={() => {
+                        localStorage.clear();
+                        location.reload();
+                      }}
+                      className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
