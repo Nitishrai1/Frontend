@@ -30,7 +30,7 @@ export default function Signup() {
       setStatusCode(response.status);
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        alert('Sign-up successful');
+        // alert('Sign-up successful');
         navigate('/login');
       } else {
         alert(`Error in sign up: ${data.msg}`);

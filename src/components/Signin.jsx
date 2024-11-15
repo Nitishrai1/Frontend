@@ -23,7 +23,7 @@ export default function Signin() {
       setStatusCode(response.status);
       if (response.ok) {
         localStorage.setItem('token', res.token);
-        alert('Logged in successfully');
+        // alert('Logged in successfully');
         navigate('/homepage');
       } else {
         alert('Incorrect username or password');
