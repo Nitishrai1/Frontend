@@ -25,13 +25,11 @@ export default function NavBarSection({
   const [notification, setNotification] = useState([]);
   const [newnotification, setnewNotification] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
   const [onOpen, setOpen] = useState(false);
 
   useEffect(() => {
     updateNotification();
-
-    // Cleanup timer on unmount
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -68,43 +66,38 @@ export default function NavBarSection({
           authorization: `${token}`,
         },
       });
+
       const data = await response.json();
-      console.log(`unread messages are ${data.unreadNotification}`);
+      const unreadNotifications = data.unreadNotification.map((notification) => ({
+        message: notification.message,
+        projectDetails: notification.projectDetails,
+      }));
 
-      const unreadNotifications = data.unreadNotification.map(
-        (notification) => ({
-          message: notification.message,
-          projectDetails: notification.projectDetails,
-        })
-      );
-
-      setnewNotification(unreadNotifications);
-      setUnreadCount(unreadNotifications.length);
+      setnewNotification(unreadNotifications || []);
+      setUnreadCount(unreadNotifications.length || 0);
 
       const response2 = await fetch(`${apiUrl}/user/allNotification`, {
         method: "GET",
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
           authorization: `${token}`,
         },
       });
       const data2 = await response2.json();
-      console.log(`allnotifcation messages are ${data.allNotification}`);
 
       const allNotifications = data2.allNotification.map((notification) => ({
         message: notification.message,
         projectDetails: notification.projectDetails,
       }));
 
-      setNotification(allNotifications);
+      setNotification(allNotifications || []);
     } catch (err) {
       setError(err.message);
-      console.log(err);
-      alert("Error in fetching the notification");
+      console.error("Error fetching notifications:", err);
     }
   };
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     const query = e.target.value;
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -114,7 +107,7 @@ export default function NavBarSection({
       setSearchquery(query);
       console.log(`Search query updated to: ${query}`);
     }, 500);
-  }
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -127,34 +120,24 @@ export default function NavBarSection({
     formData.append("image", image);
 
     try {
-      const response = await fetch(
-        `${apiUrl}/user/Search/upload-profile-picture`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await response.json();
+      const response = await fetch(`${apiUrl}/user/Search/upload-profile-picture`, {
+        method: "POST",
+        body: formData,
+      });
 
+      const data = await response.json();
       if (response.ok) {
         setPreviewImage(data.imageUrl);
-        console.log(`Image link in the frontend is ${data.imageUrl}`);
-        const userimage = await updateuserprofile({ userImage: data.imageUrl });
-
-        if (!userimage.ok) {
-          alert("Error in saving the image link in the database");
-        } else {
-          alert("Image link saved in the database successfully");
-        }
+        await updateUserProfile({ userImage: data.imageUrl });
       } else {
         alert(`Error uploading image: ${data.error}`);
       }
     } catch (error) {
-      console.error("Error uploading image in cloud", error);
+      console.error("Error uploading image:", error);
     }
   };
 
-  async function updateuserprofile({ userImage }) {
+  const updateUserProfile = async ({ userImage }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(`${apiUrl}/user/updatePhoto`, {
@@ -166,32 +149,30 @@ export default function NavBarSection({
         body: JSON.stringify({ profilepicture: userImage }),
       });
 
-      if (!response.ok) {
-        alert("Error in uploading image. Please try again.");
-      }
-
       const res = await response.json();
-      alert(res.msg);
+      if (!response.ok) {
+        alert("Error saving image link to the database");
+      } else {
+        alert(res.msg);
+      }
     } catch (err) {
-      console.error("Error in backend:", err);
-      alert(`Error: ${err}`);
+      console.error("Error updating user profile:", err);
     }
-  }
+  };
 
-  async function updateFilteredTodo() {
+  const updateFilteredTodo = async () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${apiUrl}/user/Search/${searchquery}`, {
         method: "GET",
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
           authorization: token,
         },
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`Filtered data fetched successfully`, data.task);
         setFilteredTodos(data.task);
       } else {
         console.error("Error fetching filtered data");
@@ -199,35 +180,16 @@ export default function NavBarSection({
     } catch (error) {
       console.error("Error fetching filtered data:", error);
     }
-  }
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleDropdown = () =>{
+  const handleDropdown = () => {
     setOpen(!onOpen);
-    updateNotificaiton();
+    updateNotification();
   };
-  const  updateNotificaiton=async()=>{
-    try{
-      const token=localStorage.getItem('token');
-      const response=await fetch(`${apiUrl}/user/Search/updateNotification`,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          authorization:token,
-        }
-      });
-      const data=await response.json();
-      console.log(data.msg);
-
-
-    }catch(Err){
-      alert(`Error in updating the notificaiton read ${Err.message}`)
-
-    }
-  }
 
   return (
     <nav className="bg-[#f2f6fe] poppins-light">
@@ -249,16 +211,15 @@ export default function NavBarSection({
           <div className="flex items-center">
             <div className="relative flex items-center">
               <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                {unreadCount>0 ? unreadCount : ''}
+                {unreadCount > 0 ? unreadCount : ""}
               </span>
-
               <Bell
                 className="h-6 w-6 cursor-pointer"
                 onClick={handleDropdown}
               />
             </div>
             {onOpen && (
-              <div className="absolute right-2  mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden max-h-96 overflow-y-auto">
+              <div className="absolute right-2 mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden max-h-96 overflow-y-auto">
                 <div className="p-4">
                   <h3 className="text-lg font-semibold mb-2 text-gray-800">
                     Notifications
@@ -292,7 +253,6 @@ export default function NavBarSection({
                 </div>
               </div>
             )}
-
             <div className="ml-4 flex items-center relative">
               <img
                 className="h-8 w-8 rounded-full cursor-pointer"
@@ -311,35 +271,24 @@ export default function NavBarSection({
                   ▼
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-                    <div className="py-1">
-                      <label className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100">
-                        Upload Image
-                        <input
-                          type="file"
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                      </label>
-                      <button
-                        onClick={handleImageUpload}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none"
-                      >
-                        Save Image
-                      </button>
-                    </div>
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                    <a
+                      href="/settings"
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      Settings
+                    </a>
+                    <button
+                      onClick={() => {
+                        localStorage.clear();
+                        location.reload();
+                      }}
+                      className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
                   </div>
                 )}
-              </div>
-              <div className="h-10 w-10 mx-3">
-                <h1
-                  className="text-3xl font-bold "
-                  style={{ color: "rgb(116, 17, 228)" }}
-                >
-                  Tasky
-                </h1>
-
-                <div className="mt-2 border-t-2 border-dashed border-gray-500 w-24 mx-auto"></div>
               </div>
             </div>
           </div>
