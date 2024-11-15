@@ -78,8 +78,8 @@ export default function NavBarSection({
         })
       );
 
-      setnewNotification(unreadNotifications ? unreadNotifications : '');
-      setUnreadCount(unreadNotifications.length>0 ? unreadNotifications.length : 0);
+      setnewNotification(unreadNotifications || []);
+      setUnreadCount(unreadNotifications.length || 0);
 
       const response2 = await fetch(`${apiUrl}/user/allNotification`, {
         method: "GET",
@@ -96,7 +96,7 @@ export default function NavBarSection({
         projectDetails: notification.projectDetails,
       }));
 
-      setNotification(allNotifications);
+      setNotification(allNotifications || []);
     } catch (err) {
       setError(err.message);
       console.log(err);
