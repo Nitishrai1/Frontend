@@ -70,6 +70,11 @@ export default function NavBarSection({
       });
       const data = await response.json();
       // console.log(`unread messages are ${data.unreadNotification}`);
+      if(!data.unreadNotification){
+        setnewNotification([])
+        setUnreadCount(0);
+        return
+      }
 
       const unreadNotifications = data.unreadNotification.map(
         (notification) => ({
