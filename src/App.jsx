@@ -120,9 +120,14 @@ function App() {
   };
   if (isAuthenticated == null || isLoading) {
     return (
-      <div className="spinner">Loading authentication status and data...</div>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+        <div className="text-white text-xl text-center bg-black bg-opacity-70 p-6 rounded-lg">
+          Loading...
+        </div>
+      </div>
     );
   }
+  
 
   return (
     <BrowserRouter>
