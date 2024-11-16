@@ -19,8 +19,9 @@ export default function HomePage({
   const [searchquery, setSearchquery] = useState("")
   const [filteredTodos, setFilteredTodos] = useState(todos)
   const [isSuccess, setIsSuccess] = useState(false)
-  const [isAddtaskOpen, setIsAddTaskOpen] = useState(false)
-  const navigate = useNavigate()
+  const [isAddtaskOpen, setIsAddTaskOpen] = useState(false);
+  const [taskAdded,setTaskAdded]=useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loginMessageShown = localStorage.getItem("loginMessageShown")
@@ -63,6 +64,12 @@ export default function HomePage({
         <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md z-50 transition transform ease-in-out duration-300">
           <strong className="font-bold">Success!</strong>
           <span className="block sm:inline ml-2">Login successful.</span>
+        </div>
+      )}
+      {taskAdded && (
+        <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md z-50 transition transform ease-in-out duration-300">
+          <strong className="font-bold">Success!</strong>
+          <span className="block sm:inline ml-2">Task added successful.</span>
         </div>
       )}
 
@@ -125,7 +132,7 @@ export default function HomePage({
       {isAddtaskOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 m-4 w-[90%] h-[90%] max-w-2xl max-h-[800px]">
-            <Createtask setTodos={setTodos} setIsAddTaskOpen={setIsAddTaskOpen} />
+            <Createtask setTodos={setTodos} setIsAddTaskOpen={setIsAddTaskOpen} setTaskAdded={setTaskAdded} />
           </div>
         </div>
       )}
