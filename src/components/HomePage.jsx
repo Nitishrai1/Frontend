@@ -34,7 +34,7 @@ export default function HomePage({
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => setIsSuccess(false), 3000)
-      const timer2=setTimeout(()=>taskAdded(false),3000);
+      const timer2=setTimeout(()=>setTaskAdded(false),3000);
 
       return () => {
         clearTimeout(timer)
