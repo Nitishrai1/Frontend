@@ -8,6 +8,7 @@ export default function Createtask({ setTodos, setIsAddTaskOpen }) {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [error, setError] = useState("")
+  const [taskAdded,setTaskAdded]=useState(false);
 
   const goBack = () => {
     setIsAddTaskOpen(false)
@@ -37,7 +38,8 @@ export default function Createtask({ setTodos, setIsAddTaskOpen }) {
 
       const data = await response.json()
       if (response.ok) {
-        alert(`Todo added successfully: ${data.msg}`)
+        // alert(`Todo added successfully: ${data.msg}`)
+        setTaskAdded(true);
         setTodos(data.updatedTask)
         console.log(`updated task is `, data.updatedTask)
         setIsAddTaskOpen(false)
@@ -51,6 +53,12 @@ export default function Createtask({ setTodos, setIsAddTaskOpen }) {
 
   return (
     <div className="w-full h-full bg-gradient-to-b from-green-100 to-blue-100 flex items-center justify-center p-4 rounded-lg">
+      {taskAdded && (
+        <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md z-50 transition transform ease-in-out duration-300">
+          <strong className="font-bold">Success!</strong>
+          <span className="block sm:inline ml-2">Task added successful.</span>
+        </div>
+      )}
       <div className="bg-white rounded-lg shadow-md w-full h-full p-6 flex flex-col">
         <button
           onClick={goBack}
@@ -96,6 +104,7 @@ export default function Createtask({ setTodos, setIsAddTaskOpen }) {
           </button>
         </div>
       </div>
+      
     </div>
   )
 }
