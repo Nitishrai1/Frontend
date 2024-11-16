@@ -34,9 +34,14 @@ export default function HomePage({
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => setIsSuccess(false), 3000)
-      return () => clearTimeout(timer)
+      const timer2=setTimeout(()=>taskAdded(false),3000);
+
+      return () => {
+        clearTimeout(timer)
+        clearTimeout(timer2)
+      }
     }
-  }, [isSuccess])
+  }, [isSuccess,taskAdded])
 
   useEffect(() => {
     const results = todos.filter((todo) =>
