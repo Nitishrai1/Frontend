@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import ForgetPassword from './ForgetPassword'; // Import the ForgetPassword component
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export default function Signin({setAuthenticated}) {
+export default function Signin({ setAuthenticated }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [statusCode, setStatusCode] = useState(null);
-  const navigate = useNavigate();
+  const [showForgetPassword, setShowForgetPassword] = useState(false); // State to toggle ForgetPassword
 
   const authenticate = async (e) => {
     e.preventDefault();
@@ -23,8 +24,7 @@ export default function Signin({setAuthenticated}) {
       setStatusCode(response.status);
       if (response.ok) {
         localStorage.setItem('token', res.token);
-        setAuthenticated(true)
-        navigate('/homepage');
+        setAuthenticated(true);
       } else {
         alert('Incorrect username or password');
       }
@@ -35,7 +35,6 @@ export default function Signin({setAuthenticated}) {
   };
 
   const renderError = () => {
-    console.log('error called');
     switch (statusCode) {
       case 400:
         return <div className="text-red-500">Bad Request</div>;
@@ -50,23 +49,33 @@ export default function Signin({setAuthenticated}) {
     }
   };
 
-  const handleForget = () => navigate('/forgetpassword');
-
-  return (
+  return showForgetPassword ? (
+    <ForgetPassword setShowForgetPassword={setShowForgetPassword} />
+  ) : (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {statusCode ? (
           renderError()
         ) : (
-          <form onSubmit={authenticate} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <form
+            onSubmit={authenticate}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+          >
             <div className="p-8">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-green-700">Welcome back</h2>
-                <p className="mt-2 text-sm text-blue-600">Sign in to your Tasky account</p>
+                <h2 className="text-3xl font-bold text-green-700">
+                  Welcome back
+                </h2>
+                <p className="mt-2 text-sm text-blue-600">
+                  Sign in to your Tasky account
+                </p>
               </div>
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-green-700">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-green-700"
+                  >
                     Email address
                   </label>
                   <input
@@ -80,7 +89,10 @@ export default function Signin({setAuthenticated}) {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-green-700">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-green-700"
+                  >
                     Password
                   </label>
                   <input
@@ -101,14 +113,21 @@ export default function Signin({setAuthenticated}) {
                       type="checkbox"
                       className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                     />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-green-700">
+                    <label
+                      htmlFor="remember-me"
+                      className="ml-2 block text-sm text-green-700"
+                    >
                       Remember me
                     </label>
                   </div>
-                  <div className="text-sm" onClick={handleForget}>
-                    <Link  className="font-medium text-blue-600 hover:text-blue-500" >
+                  <div className="text-sm">
+                    <button
+                      type="button"
+                      onClick={() => setShowForgetPassword(true)}
+                      className="font-medium text-blue-600 hover:text-blue-500"
+                    >
                       Forgot your password?
-                    </Link>
+                    </button>
                   </div>
                 </div>
                 <div>
@@ -124,7 +143,10 @@ export default function Signin({setAuthenticated}) {
             <div className="px-8 py-4 bg-green-50 border-t border-green-100">
               <p className="text-xs leading-5 text-green-700">
                 Don't have an account?{' '}
-                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link
+                  to="/signup"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
                   Sign up
                 </Link>
               </p>
