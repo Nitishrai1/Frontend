@@ -1,55 +1,57 @@
-import { useEffect, useState } from "react";
-import LeftSidebar from "./SidebarCom/LeftSidebar";
-import NavBar from "./DashboardSec/NavBar";
-import Todo from "./Cards/Todo";
-import RightSideBar from "./SidebarCom/RightSideCom";
-import { useNavigate } from "react-router-dom";
+'use client'
+
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import LeftSidebar from "./SidebarCom/LeftSidebar"
+import NavBar from "./DashboardSec/NavBar"
+import Todo from "./Cards/Todo"
+import RightSideBar from "./SidebarCom/RightSideCom"
+import Createtask from "./Functinality/Newtask"
 
 export default function HomePage({
-  todos,
-  isAuthenticated,
-  setAuthenticated,
-  setTodos,
-  userdata,
-  setUserdata,
+  todos = [],
+  isAuthenticated = false,
+  setAuthenticated = () => {},
+  setTodos = () => {},
+  userdata = {},
+  setUserdata = () => {},
 }) {
-  const [searchquery, setSearchquery] = useState("");
-  const [filteredTodos, setFilteredTodos] = useState(todos);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const navigate = useNavigate();
+  const [searchquery, setSearchquery] = useState("")
+  const [filteredTodos, setFilteredTodos] = useState(todos)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [isAddtaskOpen, setIsAddTaskOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const loginMessageShown = localStorage.getItem("loginMessageShown");
+    const loginMessageShown = localStorage.getItem("loginMessageShown")
     if (!loginMessageShown) {
-      setIsSuccess(true);
-      localStorage.setItem("loginMessageShown", "true");
+      setIsSuccess(true)
+      localStorage.setItem("loginMessageShown", "true")
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (isSuccess) {
-      const timer = setTimeout(() => setIsSuccess(false), 3000);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(() => setIsSuccess(false), 3000)
+      return () => clearTimeout(timer)
     }
-  }, [isSuccess]);
+  }, [isSuccess])
 
   useEffect(() => {
     const results = todos.filter((todo) =>
       todo.title.toLowerCase().includes(searchquery.toLowerCase())
-    );
-    setFilteredTodos(results);
-  }, [searchquery, todos]);
+    )
+    setFilteredTodos(results)
+  }, [searchquery, todos])
 
-  function addProject() {
-    navigate("/createNewTask");
-  }
+  const addProject = () => setIsAddTaskOpen(!isAddtaskOpen)
 
-  function updateStatus(status) {
-    setFilteredTodos(todos.filter((todo) => todo.status === status));
+  const updateStatus = (status) => {
+    setFilteredTodos(todos.filter((todo) => todo.status === status))
   }
 
   return (
-    <div className="flex bg-[#f2f6fe] min-h-screen border-box">
+    <div className="flex bg-gradient-to-b from-green-100 to-blue-100 min-h-screen border-box relative">
       <LeftSidebar
         isAuthenticated={isAuthenticated}
         setAuthenticated={setAuthenticated}
@@ -73,27 +75,27 @@ export default function HomePage({
           userdata={userdata}
         />
 
-        <div className="flex poppins-medium flex-col lg:flex-row gap-4 p-5">
-          <div className="flex-1 p-2 poppins-light rounded-3xl bg-white h-[650px] w-full lg:w-[800px] overflow-hidden">
+        <div className="flex flex-col lg:flex-row gap-4 p-5">
+          <div className="flex-1 p-2 rounded-lg bg-white h-[650px] w-full lg:w-[800px] overflow-hidden shadow-md">
             <div className="flex justify-between p-2">
-              <div className="poppins-regular text-lg">
-                <b>Project</b>
+              <div className="text-lg font-semibold text-green-700">
+                Projects
               </div>
               <button
                 onClick={addProject}
-                className="bg-[#744be4] rounded-3xl h-10 px-4 w-36 text-white"
+                className="bg-green-600 hover:bg-green-700 rounded-md h-10 px-4 w-36 text-white transition-colors duration-300"
               >
                 Add Task
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-2 poppins-medium">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-2">
               {["started", "ongoing", "completed"].map((status) => (
-                <div className="flex justify-between" key={status}>
-                  <div>{status.charAt(0).toUpperCase() + status.slice(1)}</div>
+                <div className="flex justify-between items-center" key={status}>
+                  <div className="text-green-700 capitalize">{status}</div>
                   <button
                     onClick={() => updateStatus(status)}
-                    className="text-lg"
+                    className="text-lg bg-green-100 w-8 h-8 rounded-full text-green-700 hover:bg-green-200 transition-colors duration-300"
                   >
                     +
                   </button>
@@ -101,13 +103,13 @@ export default function HomePage({
               ))}
             </div>
 
-            <div className="todo-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-2 overflow-y-auto h-[520px] scroll-container">
+            <div className="todo-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-2 overflow-y-auto h-[520px] scroll-container mt-4">
               {filteredTodos.length > 0 ? (
                 filteredTodos.map((todo) => (
                   <Todo key={todo.id} todo={todo} setTodos={setTodos} />
                 ))
               ) : (
-                <div className="col-span-full text-center">
+                <div className="col-span-full text-center text-green-700">
                   <h2>Task Not Found</h2>
                 </div>
               )}
@@ -119,6 +121,14 @@ export default function HomePage({
           </div>
         </div>
       </div>
+
+      {isAddtaskOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 m-4 w-[90%] h-[90%] max-w-2xl max-h-[800px]">
+            <Createtask setTodos={setTodos} setIsAddTaskOpen={setIsAddTaskOpen} />
+          </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }

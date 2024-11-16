@@ -65,7 +65,7 @@ export default function TaskyLandingPage() {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold text-blue-700 mb-8">Ready to Boost Your Productivity?</h2>
             <p className="text-xl text-green-700 mb-8">Join thousands of users who have transformed their task management with Tasky.</p>
-            <button className="px-6 py-3 bg-green-500 text-white text-lg font-semibold rounded-md hover:bg-green-600 transition-colors duration-300 shadow-md">
+            <button onClick={handleLogin} className="px-6 py-3 bg-green-500 text-white text-lg font-semibold rounded-md hover:bg-green-600 transition-colors duration-300 shadow-md">
               Get Started Now
             </button>
           </div>
