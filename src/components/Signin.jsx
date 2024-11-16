@@ -105,8 +105,8 @@ export default function Signin({setAuthenticated}) {
                       Remember me
                     </label>
                   </div>
-                  <div className="text-sm">
-                    <Link onClick={handleForget} className="font-medium text-blue-600 hover:text-blue-500">
+                  <div className="text-sm" onClick={handleForget}>
+                    <Link  className="font-medium text-blue-600 hover:text-blue-500" >
                       Forgot your password?
                     </Link>
                   </div>
