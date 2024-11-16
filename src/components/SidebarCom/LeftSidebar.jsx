@@ -15,7 +15,7 @@ export default function CollapsibleSidebar ({isAutehnticated,setAuthenticated ,s
     setAuthenticated(false);
     setUserdata({});
     setFilteredTodos([]);
-    navigate("/login");
+    navigate("/");
   }
   function userProfilerender(){
     navigate("/userProfile");
