@@ -13,6 +13,7 @@ export default function CollapsibleSidebar ({isAutehnticated,setAuthenticated ,s
   function Logout(){
     localStorage.removeItem("token");
     setAuthenticated(false);
+    localStorage.removeItem("loginMessageShown")
     setUserdata({});
     setFilteredTodos([]);
     navigate("/");
