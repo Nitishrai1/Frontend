@@ -1,5 +1,5 @@
-import { Mail, ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Mail, ExternalLink } from 'lucide-react';
+import { useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const UserCard = ({ user }) => {
@@ -9,10 +9,8 @@ const UserCard = ({ user }) => {
   const [developerId, setDeveloperId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
 
-  useEffect(() => {
-    // eslint-disable-next-line react/prop-types
+  useState(() => {
     setClientEmail(user.userEmail);
-    // eslint-disable-next-line react/prop-types
     setDeveloperId(user.userId);
   }, [user]);
 
@@ -70,8 +68,8 @@ const UserCard = ({ user }) => {
   const handleCloseModal = () => setIsMessageOpen(false);
 
   return (
-    <div className="overflow-hidden transition-all hover:shadow-lg dark:bg-[#f1ecff] p-6 flex flex-col items-center text-center rounded-lg border border-gray-300">
-      <div className="w-24 h-24 mb-4 bg-gray-200 rounded-full flex justify-center items-center">
+    <div className="overflow-hidden transition-all hover:shadow-lg bg-white p-6 flex flex-col items-center text-center rounded-lg border border-green-200">
+      <div className="w-24 h-24 mb-4 bg-green-200 rounded-full flex justify-center items-center overflow-hidden">
         {user.imageLink ? (
           <img
             src={user.imageLink}
@@ -79,7 +77,7 @@ const UserCard = ({ user }) => {
             className="w-full h-full object-cover rounded-full"
           />
         ) : (
-          <span className="text-xl text-white">
+          <span className="text-xl text-green-700">
             {(user.userName || "NA")
               .split(" ")
               .map((n) => n[0])
@@ -88,14 +86,14 @@ const UserCard = ({ user }) => {
         )}
       </div>
 
-      <h3 className="text-xl font-semibold mb-1">{user.userName}</h3>
-      <p className="text-sm text-muted-foreground mb-4">{user.userEmail}</p>
+      <h3 className="text-xl font-semibold mb-1 text-green-700">{user.userName}</h3>
+      <p className="text-sm text-green-600 mb-4">{user.userEmail}</p>
 
       <div className="flex space-x-4">
         <button
           onClick={messageDev}
           aria-label="Message Developer"
-          className="focus:outline-none"
+          className="focus:outline-none text-green-600 hover:text-green-700 transition-colors"
         >
           <Mail size={20} />
         </button>
@@ -108,32 +106,32 @@ const UserCard = ({ user }) => {
             ></div>
 
             <div className="relative bg-white rounded-lg shadow-lg p-6 w-96 max-w-full z-10">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800">
+              <h2 className="text-lg font-semibold mb-4 text-green-700">
                 Message Developer
               </h2>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-green-700">
                     Your Message
                   </label>
                   <textarea
                     rows="4"
                     value={message}
                     onChange={handleMessageChange}
-                    className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-green-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Type your message here..."
                   ></textarea>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-green-700">
                     Upload Project Document
                   </label>
                   <input
                     type="file"
                     accept=".doc,.docx,.pdf"
                     onChange={handleFileChange}
-                    className="w-full border border-gray-300 rounded-md shadow-sm p-2"
+                    className="w-full border border-green-300 rounded-md shadow-sm p-2"
                   />
                 </div>
 
@@ -147,7 +145,7 @@ const UserCard = ({ user }) => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
                   >
                     Send
                   </button>
@@ -159,7 +157,7 @@ const UserCard = ({ user }) => {
 
         <a
           href={user.imageLink || "#"}
-          className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+          className="text-green-600 hover:text-green-700 transition-colors"
           aria-label={`View ${user.userName}'s profile`}
         >
           <ExternalLink size={20} />
