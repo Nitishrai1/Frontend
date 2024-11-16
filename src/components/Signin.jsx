@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ForgetPassword from './ForgetPassword'; // Import the ForgetPassword component
+import ForgetPassword from './ForgetPassword'; 
+import { useNavigate } from 'react-router-dom';
+
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -8,7 +10,8 @@ export default function Signin({ setAuthenticated }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [statusCode, setStatusCode] = useState(null);
-  const [showForgetPassword, setShowForgetPassword] = useState(false); // State to toggle ForgetPassword
+  const [showForgetPassword, setShowForgetPassword] = useState(false);
+  const navigate=useNavigate();
 
   const authenticate = async (e) => {
     e.preventDefault();
@@ -25,6 +28,7 @@ export default function Signin({ setAuthenticated }) {
       if (response.ok) {
         localStorage.setItem('token', res.token);
         setAuthenticated(true);
+        navigate('/homepage')
       } else {
         alert('Incorrect username or password');
       }
