@@ -30,7 +30,6 @@ export default function Signup() {
       setStatusCode(response.status);
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        // alert('Sign-up successful');
         navigate('/login');
       } else {
         alert(`Error in sign up: ${data.msg}`);
@@ -58,55 +57,55 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {statusCode ? (
           renderError()
         ) : (
-          <form onSubmit={handleSignup} className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-8 sm:p-12">
+          <form onSubmit={handleSignup} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="p-8">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-extrabold text-gray-900">Create an account</h2>
-                <p className="mt-2 text-sm text-gray-600">Join us today!</p>
+                <h2 className="text-3xl font-bold text-green-700">Create an account</h2>
+                <p className="mt-2 text-sm text-blue-600">Join Tasky today!</p>
               </div>
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="email" className="block text-sm font-medium text-green-700">
                     Email address
                   </label>
                   <input
                     id="email"
                     type="email"
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="password" className="block text-sm font-medium text-green-700">
                     Password
                   </label>
                   <input
                     id="password"
                     type="password"
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="confirm-password" className="block text-sm font-medium text-green-700">
                     Confirm Password
                   </label>
                   <input
                     id="confirm-password"
                     type="password"
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     placeholder="Confirm your password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -115,17 +114,17 @@ export default function Signup() {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300"
                   >
                     Sign up
                   </button>
                 </div>
               </div>
             </div>
-            <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 sm:px-12">
-              <p className="text-xs leading-5 text-gray-500">
+            <div className="px-8 py-4 bg-green-50 border-t border-green-100">
+              <p className="text-xs leading-5 text-green-700">
                 Already have an account?{' '}
-                <Link to="/login" className="font-medium text-purple-600 hover:text-purple-500">
+                <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
                   Log in
                 </Link>
               </p>

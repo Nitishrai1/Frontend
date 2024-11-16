@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export default function Signin() {
+export default function Signin({setAuthenticated}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [statusCode, setStatusCode] = useState(null);
@@ -23,7 +23,7 @@ export default function Signin() {
       setStatusCode(response.status);
       if (response.ok) {
         localStorage.setItem('token', res.token);
-        // alert('Logged in successfully');
+        setAuthenticated(true)
         navigate('/homepage');
       } else {
         alert('Incorrect username or password');
@@ -50,42 +50,44 @@ export default function Signin() {
     }
   };
 
+  const handleForget = () => navigate('/forgetpassword');
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {statusCode ? (
           renderError()
         ) : (
-          <form onSubmit={authenticate} className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-8 sm:p-12">
+          <form onSubmit={authenticate} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="p-8">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-extrabold text-gray-900">Welcome back</h2>
-                <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
+                <h2 className="text-3xl font-bold text-green-700">Welcome back</h2>
+                <p className="mt-2 text-sm text-blue-600">Sign in to your Tasky account</p>
               </div>
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="email" className="block text-sm font-medium text-green-700">
                     Email address
                   </label>
                   <input
                     id="email"
                     type="email"
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="password" className="block text-sm font-medium text-green-700">
                     Password
                   </label>
                   <input
                     id="password"
                     type="password"
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -97,14 +99,14 @@ export default function Signin() {
                       id="remember-me"
                       name="remember-me"
                       type="checkbox"
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                     />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                    <label htmlFor="remember-me" className="ml-2 block text-sm text-green-700">
                       Remember me
                     </label>
                   </div>
                   <div className="text-sm">
-                    <Link to="/forgot-password" className="font-medium text-purple-600 hover:text-purple-500">
+                    <Link onClick={handleForget} className="font-medium text-blue-600 hover:text-blue-500">
                       Forgot your password?
                     </Link>
                   </div>
@@ -112,17 +114,17 @@ export default function Signin() {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300"
                   >
                     Sign in
                   </button>
                 </div>
               </div>
             </div>
-            <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 sm:px-12">
-              <p className="text-xs leading-5 text-gray-500">
+            <div className="px-8 py-4 bg-green-50 border-t border-green-100">
+              <p className="text-xs leading-5 text-green-700">
                 Don't have an account?{' '}
-                <Link to="/signup" className="font-medium text-purple-600 hover:text-purple-500">
+                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
                   Sign up
                 </Link>
               </p>

@@ -16,6 +16,7 @@ import Alltask from "./components/Cards/Tasks/Alltask";
 // this is the component fot the clock button
 import TaskCompletedTime from "./components/DashboardSec/Timer";
 import UserGrid from "./components/Functinality/Developers/Alldeveloper";
+import TaskyLandingPage from "./components/LandingPage";
 // const Todos = lazy(() => import("./components/Cards/Tasks/Alltask"));
 const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
@@ -147,7 +148,7 @@ function App() {
               </Suspense>
             ) : (
               <Suspense fallback={<div className="spinner">Loading...</div>}>
-                <Signin setAuthenticated={setAuthenticated} />
+                <TaskyLandingPage  />
               </Suspense>
             )
           }
