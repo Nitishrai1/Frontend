@@ -18,11 +18,11 @@ export default function UserProfile({ todos, userdata }) {
     if (completedTodos >= 50) {
       setBadge({ name: 'Diamond', color: 'text-purple-600' })
     } else if (completedTodos >= 30) {
-      setBadge({ name: 'Platinum', color: 'text-gray-400' })
+      setBadge({ name: 'Platinum', color: 'text-gray-500' })
     } else if (completedTodos >= 10) {
       setBadge({ name: 'Gold', color: 'text-yellow-500' })
     } else if (completedTodos >= 5) {
-      setBadge({ name: 'Silver', color: 'text-gray-300' })
+      setBadge({ name: 'Silver', color: 'text-gray-500' })
     } else if (completedTodos > 0) {
       setBadge({ name: 'Bronze', color: 'text-orange-500' })
     }
