@@ -188,7 +188,7 @@ function App() {
           path="/EditTask"
           element={
             <Suspense fallback={"Loading..."}>
-              <Edittask />
+              <Edittask setTodos={setTodos} />
             </Suspense>
           }
         />
