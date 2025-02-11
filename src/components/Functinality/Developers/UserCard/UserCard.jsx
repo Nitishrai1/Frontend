@@ -64,6 +64,7 @@ const UserCard = ({ user }) => {
     }
   };
 
+  
   const messageDev = () => setIsMessageOpen(true);
   const handleCloseModal = () => setIsMessageOpen(false);
 
@@ -156,9 +157,9 @@ const UserCard = ({ user }) => {
         )}
 
         <a
-          href={user.imageLink || "#"}
+          href={'https://tasky-chat-app.vercel.app/'}
           className="text-green-600 hover:text-green-700 transition-colors"
-          aria-label={`View ${user.userName}'s profile`}
+          
         >
           <ExternalLink size={20} />
         </a>
