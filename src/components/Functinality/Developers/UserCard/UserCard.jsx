@@ -1,5 +1,5 @@
 import { Mail, ExternalLink } from 'lucide-react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const UserCard = ({ user }) => {
@@ -9,10 +9,15 @@ const UserCard = ({ user }) => {
   const [developerId, setDeveloperId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
 
-  useState(() => {
-    setClientEmail(user.userEmail);
-    setDeveloperId(user.userId);
+  console.log(`user name ${user.username} user email is ${user.email}`)
+
+  useEffect(() => {
+    if (user) {
+      setClientEmail(user.email);
+      setDeveloperId(user.userId);
+    }
   }, [user]);
+  console.log(`image link is ${user.imageLink}`)
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -64,7 +69,8 @@ const UserCard = ({ user }) => {
     }
   };
 
-  
+
+
   const messageDev = () => setIsMessageOpen(true);
   const handleCloseModal = () => setIsMessageOpen(false);
 
@@ -74,12 +80,12 @@ const UserCard = ({ user }) => {
         {user.imageLink ? (
           <img
             src={user.imageLink}
-            alt={`${user.userName}'s profile`}
+            alt={`${user.username}'s profile`}
             className="w-full h-full object-cover rounded-full"
           />
         ) : (
           <span className="text-xl text-green-700">
-            {(user.userName || "NA")
+            {(user.username || "NA")
               .split(" ")
               .map((n) => n[0])
               .join("")}
@@ -87,8 +93,8 @@ const UserCard = ({ user }) => {
         )}
       </div>
 
-      <h3 className="text-xl font-semibold mb-1 text-green-700">{user.userName}</h3>
-      <p className="text-sm text-green-600 mb-4">{user.userEmail}</p>
+      <h3 className="text-xl font-semibold mb-1 text-green-700">{user.username}</h3>
+      <p className="text-sm text-green-600 mb-4">{user.email}</p>
 
       <div className="flex space-x-4">
         <button

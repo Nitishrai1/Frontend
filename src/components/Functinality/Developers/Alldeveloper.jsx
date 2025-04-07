@@ -5,25 +5,23 @@ import { Trophy, Search, ChevronRight } from "lucide-react";
 
 const UserCard = React.lazy(() => import("./UserCard/UserCard"));
 
-
-const TopDeveloper = ({ data }) => {
+const TopDeveloper = ({ user }) => {
   return (
     <div className="bg-white shadow-md rounded-2xl p-4 w-full max-w-sm mx-auto">
-      <h2 className="text-xl font-semibold mb-2 text-gray-800">Top Developer</h2>
+      
       <div className="text-gray-700 space-y-1">
         <div>
           <span className="font-medium">Username: </span>
-          {data.userName}
+          {user.username}
         </div>
         <div>
           <span className="font-medium">Email: </span>
-          {data.email}
+          {user.email}
         </div>
       </div>
     </div>
   );
 };
-
 
 export default function UserGrid() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -67,25 +65,22 @@ export default function UserGrid() {
 
   const fetchTopDeveloperData = async () => {
     try {
-      
       const response = await fetch(`${apiUrl}/user/topUsers?limit=5`, {
         method: "GET",
       });
       const data = await response.json();
       if (response.ok) {
         setTopUsers(data.topUsers || []);
-        console.log("top users are");
-        console.log(data.topUsers)
       } else {
-        
         setTopUsers(users.slice(0, 5));
       }
     } catch (err) {
       console.log("Top developer data error:", err);
-      
+
       setTopUsers(users.slice(0, 5));
     }
   };
+  
 
   const handlePreviousPage = () => {
     if (page > 1) {
@@ -98,8 +93,6 @@ export default function UserGrid() {
       setPage(page + 1);
     }
   };
-
- 
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100">
