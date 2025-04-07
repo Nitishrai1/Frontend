@@ -94,6 +94,10 @@ export default function UserGrid() {
     }
   };
 
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100">
       {/* Fixed Header */}
@@ -125,9 +129,7 @@ export default function UserGrid() {
           {/* Left Column - Regular Users */}
           <div className="w-full lg:w-3/4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-green-700">
-                All Developers
-              </h2>
+             
               <div className="text-sm text-green-700">
                 Page {page} of {totalPages}
               </div>
@@ -149,8 +151,8 @@ export default function UserGrid() {
                   }
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 p-4">
-                    {users.length > 0 ? (
-                      users.map((user, index) => (
+                    {filteredUsers.length > 0 ? (
+                      filteredUsers.map((user, index) => (
                         <UserCard key={index} user={user} />
                       ))
                     ) : (
