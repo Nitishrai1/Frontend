@@ -1,14 +1,15 @@
-import { React, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import "./App.css";
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ForgetPassword from "./components/ForgetPassword";
 import ResetFormComponent from "./components/ResetFormComponent";
-import UserProfile from "./components/DashboardSec/UserProfile";
+
 import Setting from "./components/DashboardSec/SettingCom";
 import Createtask from "./components/Functinality/Newtask";
 import Edittask from "./components/Functinality/EditTask";
 const apiUrl = import.meta.env.VITE_API_URL;
+import {userData,platformStats,activityData} from "./components/DashboardSec/platformdata" 
 import { Navigate } from "react-router-dom";
 // Lazy loading components
 const CreateTodo = lazy(() => import("./components/Functinality/Newtask"));
@@ -21,6 +22,7 @@ import TaskyLandingPage from "./components/LandingPage";
 const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
 const HomePage = lazy(() => import("./components/HomePage"));
+const UserProfile=lazy(()=>import("./components/DashboardSec/UserProfile"))
 
 function App() {
   const [isAuthenticated, setAuthenticated] = useState(null);
@@ -36,7 +38,7 @@ function App() {
     if (token) {
       setAuthenticated(true);
       fetchData(token);
-      fetchDeveloperData()
+      
     } else {
       setAuthenticated(false);
       setIsloading(false);
@@ -59,7 +61,7 @@ function App() {
               console.log("Error in getting all develper data");
             }
         }catch(err){
-            console.log("Error in fetching all developer data");
+            console.log("Error in fetching all developer data",err);
   
         }
   
@@ -68,8 +70,11 @@ function App() {
   const fetchData = async (token) => {
     try {
       setIsloading(true);
-      await fetchTodos(token);
-      await fetchUserData(token);
+      await Promise.all([
+        fetchTodos(token),
+        fetchUserData(token),
+        fetchDeveloperData()
+      ]);
       setIsloading(false);
     } catch (err) {
       console.log(`Error fetching data: ${err}`);
@@ -196,7 +201,7 @@ function App() {
           path="/userProfile"
           element={
             <Suspense fallback={"Loading..."}>
-              <UserProfile todos={todos} userdata={userdata} />
+              <UserProfile userdata={userData} platformStats={platformStats} activityData={activityData} />
             </Suspense>
           }
         />
