@@ -1,72 +1,61 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import ForgetPassword from "./components/ForgetPassword";
 import ResetFormComponent from "./components/ResetFormComponent";
-
 import Setting from "./components/DashboardSec/SettingCom";
-import Createtask from "./components/Functinality/Newtask";
 import Edittask from "./components/Functinality/EditTask";
-const apiUrl = import.meta.env.VITE_API_URL;
-import {userData,platformStats,activityData} from "./components/DashboardSec/platformdata" 
-import { Navigate } from "react-router-dom";
-// Lazy loading components
-const CreateTodo = lazy(() => import("./components/Functinality/Newtask"));
 import Alltask from "./components/Cards/Tasks/Alltask";
-// this is the component fot the clock button
 import TaskCompletedTime from "./components/DashboardSec/Timer";
 import UserGrid from "./components/Functinality/Developers/Alldeveloper";
 import TaskyLandingPage from "./components/LandingPage";
-// const Todos = lazy(() => import("./components/Cards/Tasks/Alltask"));
+
+const CreateTodo = lazy(() => import("./components/Functinality/Newtask"));
 const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
 const HomePage = lazy(() => import("./components/HomePage"));
-const UserProfile=lazy(()=>import("./components/DashboardSec/UserProfile"))
+const UserProfile = lazy(() => import("./components/DashboardSec/UserProfile"));
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+import { platformStats, activityData } from "./components/DashboardSec/platformdata";
 
 function App() {
   const [isAuthenticated, setAuthenticated] = useState(null);
   const [todos, setTodos] = useState([]);
   const [userdata, setUserdata] = useState({});
   const [isLoading, setIsloading] = useState(true);
-  const [alldeveloper,setAllDeveloper]=useState([]);
+  const [alldeveloper, setAllDeveloper] = useState([]);
 
-  
-  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setAuthenticated(true);
       fetchData(token);
-      
     } else {
       setAuthenticated(false);
       setIsloading(false);
     }
-  }, [isAuthenticated]);
-  
-  // loading ka logic hai niche jab tak fetch nahi hoga logind show hoga
-  
-  const fetchDeveloperData=async()=>{
-        try{
-            const response=await fetch(`${apiUrl}/user/Search/allUser`,{
-                method:'GET',
-            })
-            const data= await response.json();
-            if(response.ok){
-              
-              setAllDeveloper(data.totaluser);
-              console.log("User data fetch for the all developer comp",data.totaluser);
-            }else{
-              console.log("Error in getting all develper data");
-            }
-        }catch(err){
-            console.log("Error in fetching all developer data",err);
-  
-        }
-  
-  
+  }, []);
+
+  const fetchDeveloperData = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/user/Search/allUser`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setAllDeveloper(data.totaluser);
+        console.log("Developer data fetched:", data.totaluser);
+      } else {
+        console.log("Error fetching developer data");
+      }
+    } catch (err) {
+      console.log("Developer data error:", err);
     }
+  };
+
   const fetchData = async (token) => {
     try {
       setIsloading(true);
@@ -93,13 +82,13 @@ function App() {
       });
       const res = await response.json();
       if (response.ok) {
-        console.log("Data fetched from database successfully");
-        setTodos(res.todos); // Update todos state with the fetched todos
+        setTodos(res.todos);
+        console.log("Todos fetched");
       } else {
-        console.log("Error in fetching the data");
+        console.log("Error fetching todos");
       }
     } catch (err) {
-      console.log(`Error occurred: ${err}`);
+      console.log("Todos fetch error", err);
     }
   };
 
@@ -115,16 +104,16 @@ function App() {
       const res = await response.json();
       if (response.ok) {
         setUserdata(res.userProfile);
-        console.log("userdata set succesfull");
-        console.log(res.userProfile);
+        console.log("User data set");
       } else {
-        console.log("Error in fetching the user data");
+        console.log("Error fetching user data");
       }
     } catch (err) {
-      console.log(`Error occured ${err}`);
+      console.log("User data fetch error", err);
     }
   };
-  if (isAuthenticated == null || isLoading) {
+
+  if (isAuthenticated === null || isLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
         <div className="text-white text-xl text-center bg-black bg-opacity-70 p-6 rounded-lg">
@@ -133,7 +122,6 @@ function App() {
       </div>
     );
   }
-  
 
   return (
     <BrowserRouter>
@@ -152,8 +140,8 @@ function App() {
                 />
               </Suspense>
             ) : (
-              <Suspense fallback={<div className="spinner">Loading...</div>}>
-                <TaskyLandingPage  />
+              <Suspense fallback={"Loading..."}>
+                <TaskyLandingPage />
               </Suspense>
             )
           }
@@ -201,7 +189,7 @@ function App() {
           path="/userProfile"
           element={
             <Suspense fallback={"Loading..."}>
-              <UserProfile userdata={userData} platformStats={platformStats} activityData={activityData} />
+              <UserProfile userdata={userdata} platformStats={platformStats} activityData={activityData} />
             </Suspense>
           }
         />
@@ -233,7 +221,7 @@ function App() {
           path="/createNewTask"
           element={
             <Suspense fallback={"Loading..."}>
-              <Createtask setTodos={setTodos} />
+              <CreateTodo setTodos={setTodos} />
             </Suspense>
           }
         />
