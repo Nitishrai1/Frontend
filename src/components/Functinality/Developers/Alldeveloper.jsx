@@ -1,9 +1,29 @@
 "use client";
 
 import React, { useState, Suspense, useEffect } from "react";
-import { Trophy, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trophy, Search, ChevronRight } from "lucide-react";
 
 const UserCard = React.lazy(() => import("./UserCard/UserCard"));
+
+
+const TopDeveloper = ({ data }) => {
+  return (
+    <div className="bg-white shadow-md rounded-2xl p-4 w-full max-w-sm mx-auto">
+      <h2 className="text-xl font-semibold mb-2 text-gray-800">Top Developer</h2>
+      <div className="text-gray-700 space-y-1">
+        <div>
+          <span className="font-medium">Username: </span>
+          {data.userName}
+        </div>
+        <div>
+          <span className="font-medium">Email: </span>
+          {data.email}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 export default function UserGrid() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,7 +43,7 @@ export default function UserGrid() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${apiUrl}/user/allUser?page=${page}&limit=${limit}`,
+        `${apiUrl}/user/allUsers?page=${page}&limit=${limit}`,
         {
           method: "GET",
         }
@@ -31,7 +51,7 @@ export default function UserGrid() {
       const data = await response.json();
       if (response.ok) {
         setAllDeveloper(data.userdata);
-
+        console.log(data.userdata);
         const total = data.totaluser || 0;
         setTotalPages(Math.ceil(total / limit));
         console.log("Developer data fetched:", data.totaluser);
@@ -47,20 +67,22 @@ export default function UserGrid() {
 
   const fetchTopDeveloperData = async () => {
     try {
-      // Assuming there's an API endpoint for top users
+      
       const response = await fetch(`${apiUrl}/user/topUsers?limit=5`, {
         method: "GET",
       });
       const data = await response.json();
       if (response.ok) {
-        setTopUsers(data.userdata || []);
+        setTopUsers(data.topUsers || []);
+        console.log("top users are");
+        console.log(data.topUsers)
       } else {
-        // Fallback: Just use the first few users as "top users" for demonstration
+        
         setTopUsers(users.slice(0, 5));
       }
     } catch (err) {
       console.log("Top developer data error:", err);
-      // Fallback for demonstration
+      
       setTopUsers(users.slice(0, 5));
     }
   };
@@ -77,9 +99,7 @@ export default function UserGrid() {
     }
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.userName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-blue-100">
@@ -136,8 +156,8 @@ export default function UserGrid() {
                   }
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 p-4">
-                    {filteredUsers.length > 0 ? (
-                      filteredUsers.map((user, index) => (
+                    {users.length > 0 ? (
+                      users.map((user, index) => (
                         <UserCard key={index} user={user} />
                       ))
                     ) : (
@@ -194,7 +214,7 @@ export default function UserGrid() {
                       key={index}
                       className="bg-white rounded-lg p-3 shadow-sm"
                     >
-                      <UserCard user={user} />
+                      {<TopDeveloper user={user} />}
                     </div>
                   ))
                 ) : (
