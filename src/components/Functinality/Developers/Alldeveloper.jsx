@@ -36,7 +36,7 @@ export default function UserGrid() {
   useEffect(() => {
     fetchDeveloperData();
     fetchTopDeveloperData();
-  }, []);
+  }, [page]);
   const fetchDeveloperData = async () => {
     try {
       setIsLoading(true);
