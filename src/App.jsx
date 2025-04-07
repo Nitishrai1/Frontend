@@ -26,7 +26,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [userdata, setUserdata] = useState({});
   const [isLoading, setIsloading] = useState(true);
-  const [alldeveloper, setAllDeveloper] = useState([]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -39,22 +39,7 @@ function App() {
     }
   }, []);
 
-  const fetchDeveloperData = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/user/Search/allUser`, {
-        method: "GET",
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setAllDeveloper(data.totaluser);
-        console.log("Developer data fetched:", data.totaluser);
-      } else {
-        console.log("Error fetching developer data");
-      }
-    } catch (err) {
-      console.log("Developer data error:", err);
-    }
-  };
+  
 
   const fetchData = async (token) => {
     try {
@@ -62,7 +47,7 @@ function App() {
       await Promise.all([
         fetchTodos(token),
         fetchUserData(token),
-        fetchDeveloperData()
+        
       ]);
       setIsloading(false);
     } catch (err) {
@@ -173,7 +158,7 @@ function App() {
           path="/allDeveloper"
           element={
             <Suspense fallback={"Loading..."}>
-              <UserGrid users={alldeveloper} />
+              <UserGrid  />
             </Suspense>
           }
         />
