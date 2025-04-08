@@ -19,8 +19,6 @@ const UserProfile = lazy(() => import("./components/DashboardSec/UserProfile"));
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-import { platformStats, activityData } from "./components/DashboardSec/platformdata";
-
 function App() {
   const [isAuthenticated, setAuthenticated] = useState(null);
   const [todos, setTodos] = useState([]);
@@ -174,7 +172,7 @@ function App() {
           path="/userProfile"
           element={
             <Suspense fallback={"Loading..."}>
-              <UserProfile userdata={userdata} platformStats={platformStats} activityData={activityData} />
+              <UserProfile userdata={userdata}  />
             </Suspense>
           }
         />
