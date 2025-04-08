@@ -22,10 +22,8 @@ export default function PlatformStats({ userdata, }) {
 
 
   useEffect(()=>{
-
   fetchLCdata();
   fetchGithubdata();    
-
   },[])
 
   const fetchLCdata=async()=>{
