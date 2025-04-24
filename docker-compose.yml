@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .                             
+    container_name: tasky-frontend
+    ports:
+      - 5173:5173                       
+    environment:
+      
+    depends_on:
+      - backend
+
+  backend:
+    image: nitishrai7070/tasky-backend:latest 
+    container_name: tasky-backend-app
+    ports:
+      - 3000:3000
+    environment:
+     

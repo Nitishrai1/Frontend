@@ -87,6 +87,7 @@ export default function TaskyLandingPage() {
   )
 }
 
+// eslint-disable-next-line react/prop-types
 function FeatureCard({ icon, title, description }) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md text-center">

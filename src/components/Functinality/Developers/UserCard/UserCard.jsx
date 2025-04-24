@@ -9,6 +9,7 @@ const UserCard = ({ user }) => {
   const [developerId, setDeveloperId] = useState("");
   const [clientEmail, setClientEmail] = useState("");
 
+  // eslint-disable-next-line react/prop-types
   console.log(`user name ${user.username} user email is ${user.email}`)
 
   useEffect(() => {
