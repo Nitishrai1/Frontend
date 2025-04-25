@@ -3,19 +3,21 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'nitishrai7070/tasky-frontend'
+        TAG = 'v1'
     }
 
     stages {
         stage('Clone Repo') {
             steps {
                 echo 'Cloning repository...'
+                // If actual clone needed, use 'git' step here
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t $IMAGE_NAME:v1 .'
+                    bat "docker build -t %IMAGE_NAME%:%TAG% ."
                 }
             }
         }
@@ -24,7 +26,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
-                        sh 'docker push $IMAGE_NAME:v1'
+                        bat "docker push %IMAGE_NAME%:%TAG%"
                     }
                 }
             }
