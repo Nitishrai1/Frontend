@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "nitishrai7070/tasky-frontend"
+        IMAGE_NAME = 'nitishrai7070/tasky-frontend'
     }
 
     stages {
@@ -15,9 +15,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def img = docker.build("${IMAGE_NAME}:v3")
-                    
-                    env.IMG_REF = "${IMAGE_NAME}:v3"
+                    sh 'docker build -t $IMAGE_NAME:v1 .'
                 }
             }
         }
@@ -25,8 +23,8 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v3/', 'dockerhub-credentials') {
-                        docker.image(env.IMG_REF).push()
+                    withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
+                        sh 'docker push $IMAGE_NAME:v1'
                     }
                 }
             }
