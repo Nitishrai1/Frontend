@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Calendar } from "../ui/Calendar"
+import  { useState } from 'react'
+import { Calendar } from "../ui/Calender"
 import { Card } from "../ui/Card"
 import { Badge } from "../ui/Badge"
 

@@ -2,19 +2,34 @@ version: '3.8'
 
 services:
   frontend:
-    build: .                             
+    build: .
     container_name: tasky-frontend
     ports:
-      - 5173:5173                       
+      - 5173:5173
     environment:
-      
+      - VITE_GITHUB_API=https://api.github.com/users/Nitishrai1/events
+      - VITE_GITHUB_TOKEN=${VITE_GITHUB_TOKEN}  
     depends_on:
       - backend
 
+  mongodb:
+    image: "mongo:latest"
+    container_name: mongo_db
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+    restart: always  
   backend:
-    image: nitishrai7070/tasky-backend:latest 
+    image: nitishrai7070/tasky-backend:latest
     container_name: tasky-backend-app
+    depends_on:
+      - mongodb
     ports:
       - 3000:3000
     environment:
-     
+      - MONGODB_URL=mongodb://mongo_db:27017/taskydb
+    restart: always 
+
+volumes:
+  mongodb_data:
