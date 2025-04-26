@@ -9,15 +9,31 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                echo 'Cloning repository...'
-                // If actual clone needed, use 'git' step here
+                git url: 'https://github.com/Nitishrai1/Frontend', branch: 'main'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Docker Compose Down') {
             steps {
                 script {
-                    bat "docker build -t %IMAGE_NAME%:%TAG% ."
+                    bat 'docker compose down'
+                }
+            }
+        }
+
+        stage('Docker Compose Build') {
+            steps {
+                script {
+                    bat 'docker compose build'
+                }
+            }
+        }
+
+        stage('Tag Image') {
+            steps {
+                script {
+                    bat "docker tag tasky_frontend nitishrai7070/tasky-frontend:v1"
+
                 }
             }
         }
@@ -25,13 +41,12 @@ pipeline {
         stage('Push to DockerHub') {
             steps {
                 script {
-                    withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
-                        bat "docker push %IMAGE_NAME%:%TAG%"
+                    withDockerRegistry([credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/']) {
+                        echo "loggin to docker hub"
+                        bat "docker push nitishrai7070/tasky-frontend:v1"
                     }
                 }
             }
         }
     }
 }
-
-
