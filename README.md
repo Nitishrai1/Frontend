@@ -1,9 +1,66 @@
-# React + Vite
+🧠 Tasky Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tasky is a collaborative frontend interface built using Vite, React, and TailwindCSS, for managing user tasks, notifications, and project submissions.
 
-Currently, two official plugins are available:
+🔧 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-Now i have to create a good routing logic for my app also i want to implemtn logic to remove the completed todos 
+Layer        Technology
+
+Frontend       React, Vite
+
+Styling        TailwindCSS
+
+State Mgmt       Context API / LocalStorage
+
+Deployment        Docker, Vercel
+
+---
+📁 Project Structure
+
+```bash
+TASKY-FRONTEND/
+│
+├── public/                   # Static assets
+├── src/                      # Source code
+│   ├── components/           # Reusable components
+│   ├── pages/                # Routes & views
+│   ├── services/             # API calls
+│   └── main.jsx              # App entry point
+│
+├── .env                      # Environment variables
+├── index.html                # Main HTML
+├── JenkinsFile               # CI/CD pipeline
+├── dockerfile                # Docker build config
+├── docker-compose.yml        # Docker compose
+├── vite.config.js            # Vite config
+├── tailwind.config.js        # Tailwind CSS setup
+├── postcss.config.js         # PostCSS plugins
+├── package.json              # Dependencies
+└── README.md
+```
+---
+🚀 Getting Started
+
+🔧 Installation
+
+```bash
+git clone https://github.com/yourusername/tasky-frontend.git
+cd tasky-frontend
+npm install
+```
+---
+
+🔐 Environment Setup
+
+Create a .env file:
+
+```bash
+VITE_API_BASE_URL=http://localhost:5000
+```
+---
+
+🧪 Run Development Server
+
+```bash
+npm run dev
+```
