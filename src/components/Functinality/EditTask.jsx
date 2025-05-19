@@ -12,6 +12,7 @@ export default function Edittask({ setTodos}) {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [error, setError] = useState("")
+  
 
   const goBack = () => {
     navigate("/homepage")
@@ -27,6 +28,12 @@ export default function Edittask({ setTodos}) {
     }
 
     try {
+      console.log(`data before sending the new data `,{
+        _id:id,
+        title:title,
+        description:description,
+
+      });
       const response = await fetch(`${apiUrl}/user/updateTask`, {
         method: "POST",
         headers: {
@@ -39,11 +46,12 @@ export default function Edittask({ setTodos}) {
           description: description,
         }),
       })
+      console.log("data send")
 
       const data = await response.json()
       if (response.ok) {
         setTodos(data.updatedTask)
-        setIsEditTaskOpen(false)
+        goBack();
       } else {
         setError(`Error updating task: ${data.msg}`)
       }
