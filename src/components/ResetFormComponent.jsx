@@ -98,6 +98,7 @@ export default function ResetFormComponent() {
             Reset Password
           </button>
         </form>
+        
       </div>
     </div>
   );
